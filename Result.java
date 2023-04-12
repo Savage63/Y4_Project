@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -132,28 +133,42 @@ public class Result
 	    // create a File object that represents the file to be read
 	    File file = new File("nmap_output.txt");
 
-	    // create a StringBuilder object to store the contents of the file
+	    // create a StringBuilder object to store the filtered contents of the file
 	    StringBuilder sb = new StringBuilder();
 
 	    try {
 	        // create a BufferedReader object to read the file
 	        BufferedReader reader = new BufferedReader(new FileReader(file));
 	        
-	        // read the contents of the file line by line and append it to the StringBuilder object
+	        // read the contents of the file line by line
 	        String line;
 	        while ((line = reader.readLine()) != null) {
-	            sb.append(line).append("\n");
+	            // extract the Device Name, OS, and MAC Address from the line
+	            if (line.startsWith("Nmap scan report for ")) {
+	                String deviceName = line.substring(21);
+	                sb.append("Device Name: ").append(deviceName).append("\n");
+	            } else if (line.startsWith("MAC Address: ")) {
+	                String macAddress = line.substring(14);
+	                sb.append("MAC Address: ").append(macAddress).append("\n");
+	            } else if (line.startsWith("OS details: ")) {
+	                String osDetails = line.substring(12);
+	                sb.append("OS: ").append(osDetails).append("\n");
+	            }
 	        }
 	        
 	        // close the reader
 	        reader.close();
 	    } catch (IOException e) {
+	        // If the file isn't found, append a message to the StringBuilder object
+	        sb.append("No Results found. Please do a Scan");
 	        e.printStackTrace();
 	    }
 
-	    // set the text of the JTextArea to the contents of the file
+	    // set the text of the JTextArea to the filtered contents of the file
 	    textArea.setText(sb.toString());
 	}
+
+
 
 
 	public Window getFrame() 
