@@ -11,7 +11,7 @@ import javax.swing.JTextArea;
 
 public class Home 
 {
-	private JFrame frame;
+	private JFrame HomePage;
 
 
 	//Launch the application.
@@ -24,7 +24,7 @@ public class Home
 				try 
 				{
 					Home window = new Home();
-					window.frame.setVisible(true);
+					window.HomePage.setVisible(true);
 				} 
 				catch (Exception e) 
 				{
@@ -38,15 +38,16 @@ public class Home
 	public Home() 
 	{ 
 	
-	    frame = new JFrame();
-	    frame.setBounds(100, 100, 799, 401);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+	    HomePage = new JFrame();
+	    HomePage.setTitle("Home Page");
+	    HomePage.setBounds(100, 100, 799, 400);
+	    HomePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    HomePage.getContentPane().setLayout(null);
 
 	    // Add a JScrollPane to the content pane
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(107, 11, 676, 351);
-	    frame.getContentPane().add(scrollPane);
+	    HomePage.getContentPane().add(scrollPane);
 
 	    // Create a new JTextArea and add it to the JScrollPane
 	    JTextArea txtrWelcomeToThe = new JTextArea();
@@ -58,7 +59,7 @@ public class Home
 
 	    JPanel panel = new JPanel();
 	    panel.setBounds(0, 0, 108, 362);
-	    frame.getContentPane().add(panel);
+	    HomePage.getContentPane().add(panel);
 	    panel.setLayout(null);
 
 	    JButton HomeButton = new JButton("Home");
@@ -68,7 +69,7 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	HomePage.dispose(); // Dispose the current frame
 	        	Home.main(null);
 	        }
 	    });
@@ -80,7 +81,7 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	HomePage.dispose(); // Dispose the current frame
 	            Scan.main(null);
 	        }
 	    });
@@ -92,7 +93,7 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	HomePage.dispose(); // Dispose the current frame
 	            Result.main(null);
 	        }
 	    });
@@ -104,7 +105,7 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	HomePage.dispose(); // Dispose the current frame
 	            User.main(null);
 	        }
 	    });
@@ -116,7 +117,7 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	HomePage.dispose(); // Dispose the current frame
 	            Contacts.main(null);
 	        }
 	    });
