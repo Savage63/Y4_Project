@@ -11,7 +11,7 @@ import javax.swing.JTextArea;
 
 public class Contacts 
 {
-	private JFrame frame;
+	private JFrame frmContactInformation;
 
 
 	//Launch the application.
@@ -24,7 +24,7 @@ public class Contacts
 				try 
 				{
 					Contacts window = new Contacts();
-					window.frame.setVisible(true);
+					window.frmContactInformation.setVisible(true);
 				} 
 				catch (Exception e) 
 				{
@@ -38,15 +38,16 @@ public class Contacts
 	public Contacts() 
 	{ 
 		
-	    frame = new JFrame();
-	    frame.setBounds(100, 100, 799, 401);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+	    frmContactInformation = new JFrame();
+	    frmContactInformation.setTitle("Contact Information");
+	    frmContactInformation.setBounds(100, 100, 799, 400);
+	    frmContactInformation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frmContactInformation.getContentPane().setLayout(null);
 
 	    // Add a JScrollPane to the content pane
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(107, 11, 676, 351);
-	    frame.getContentPane().add(scrollPane);
+	    frmContactInformation.getContentPane().add(scrollPane);
 
 	    // Create a new JTextArea and add it to the JScrollPane
 	    JTextArea txtrWelcomeToThe = new JTextArea();
@@ -58,7 +59,7 @@ public class Contacts
 
 	    JPanel panel = new JPanel();
 	    panel.setBounds(0, 0, 108, 362);
-	    frame.getContentPane().add(panel);
+	    frmContactInformation.getContentPane().add(panel);
 	    panel.setLayout(null);
 
 	    JButton HomeButton = new JButton("Home");
@@ -68,7 +69,7 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmContactInformation.dispose(); // Dispose the current frame
 	        	Home.main(null);
 	        }
 	    });
@@ -80,7 +81,7 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmContactInformation.dispose(); // Dispose the current frame
 	            Scan.main(null);
 	        }
 	    });
@@ -92,7 +93,7 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmContactInformation.dispose(); // Dispose the current frame
 	            Result.main(null);
 	        }
 	    });
@@ -104,7 +105,7 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmContactInformation.dispose(); // Dispose the current frame
 	            User.main(null);
 	        }
 	    });
@@ -116,7 +117,7 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmContactInformation.dispose(); // Dispose the current frame
 	            Contacts.main(null);
 	        }
 	    });
