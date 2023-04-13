@@ -10,7 +10,7 @@ import javax.swing.JEditorPane;
 
 public class Scan 
 {
-	JFrame frame;
+	JFrame frmScannerPage;
 
 
 	//Launch the application.
@@ -23,7 +23,7 @@ public class Scan
 				try 
 				{
 					Scan window = new Scan();
-					window.frame.setVisible(true);
+					window.frmScannerPage.setVisible(true);
 				} 
 				catch (Exception e) 
 				{
@@ -36,15 +36,16 @@ public class Scan
  	//Create the application.
 	public Scan() 
 	{
-	    frame = new JFrame();
-	    frame.setBounds(100, 100, 799, 401);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+	    frmScannerPage = new JFrame();
+	    frmScannerPage.setTitle("Scanner Page");
+	    frmScannerPage.setBounds(100, 100, 799, 400);
+	    frmScannerPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frmScannerPage.getContentPane().setLayout(null);
 
 	    // Add a button to the content pane using absolute layout
 	    JButton ScanNetworkButton = new JButton("Scan Network");
 	    ScanNetworkButton.setBounds(247, 96, 344, 138);
-	    frame.getContentPane().add(ScanNetworkButton);
+	    frmScannerPage.getContentPane().add(ScanNetworkButton);
 	    ScanNetworkButton.addActionListener(new ActionListener() 
 	    {
 	        public void actionPerformed(ActionEvent e) 
@@ -66,7 +67,7 @@ public class Scan
 		            System.out.println("nmap scan finished with exit code " + exitCode);
 
 		            // Open the Results page
-		            frame.dispose(); // Dispose the current frame
+		            frmScannerPage.dispose(); // Dispose the current frame
 		        	Result.main(null);
 
 		        } 
@@ -79,7 +80,7 @@ public class Scan
 
 	    JPanel panel = new JPanel();
 	    panel.setBounds(0, 0, 108, 362);
-	    frame.getContentPane().add(panel);
+	    frmScannerPage.getContentPane().add(panel);
 	    panel.setLayout(null);
 
 	    JButton HomeButton = new JButton("Home");
@@ -89,7 +90,7 @@ public class Scan
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmScannerPage.dispose(); // Dispose the current frame
 	        	Home.main(null);
 	        }
 	    });
@@ -102,7 +103,7 @@ public class Scan
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmScannerPage.dispose(); // Dispose the current frame
 	            Scan.main(null);
 	        }
 	    });
@@ -114,7 +115,7 @@ public class Scan
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmScannerPage.dispose(); // Dispose the current frame
 	            Result.main(null);
 	        }
 	    });
@@ -126,7 +127,7 @@ public class Scan
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmScannerPage.dispose(); // Dispose the current frame
 	            User.main(null);
 	        }
 	    });
@@ -138,7 +139,7 @@ public class Scan
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	frmScannerPage.dispose(); // Dispose the current frame
 	            Contacts.main(null);
 	        }
 	    });
@@ -146,7 +147,7 @@ public class Scan
 	    JEditorPane editorPane = new JEditorPane();
 	    editorPane.setEditable(false);
 	    editorPane.setBounds(108, 0, 675, 362);
-	    frame.getContentPane().add(editorPane);
+	    frmScannerPage.getContentPane().add(editorPane);
 	   
 	}
 }
