@@ -1,74 +1,70 @@
 import java.awt.EventQueue;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 import javax.swing.JFrame;
-import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultComboBoxModel;
 
 public class User 
 {
-	private JFrame frame;
+    private JFrame UserPage;
+    private JTextField textField;
+    private JTable table;
 
+    //Launch the application.
+    public static void main(String[] args) 
+    {
+        EventQueue.invokeLater(new Runnable() 
+        {
+            public void run() 
+            {
+                try {
+                    User window = new User();
+                    window.UserPage.setVisible(true);
+                } 
+                catch (Exception e) 
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	//Launch the application.
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					User window = new User();
-					window.frame.setVisible(true);
-				} 
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    //Create the application.
+    public User() 
+    {
+        UserPage = new JFrame();
+        UserPage.setTitle("User Page");
+        UserPage.setBounds(100, 100, 799, 400);
+        UserPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        UserPage.getContentPane().setLayout(null);
 
- 	//Create the application.
-	public User() 
-	{ 
-		
-	    frame = new JFrame();
-	    frame.setBounds(100, 100, 799, 401);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+        JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 108, 362);
+        UserPage.getContentPane().add(panel);
+        panel.setLayout(null);
 
-	    // Add a JScrollPane to the content pane
-	    JScrollPane scrollPane = new JScrollPane();
-	    scrollPane.setBounds(107, 11, 676, 351);
-	    frame.getContentPane().add(scrollPane);
-
-	    // Create a new JTextArea and add it to the JScrollPane
-	    JTextArea txtrWelcomeToThe = new JTextArea();
-	    txtrWelcomeToThe.setEditable(false);
-	    scrollPane.setViewportView(txtrWelcomeToThe);
-
-	    // Call the displayText() method to set the text of the JTextArea
-	    displayText(txtrWelcomeToThe);
-
-	    JPanel panel = new JPanel();
-	    panel.setBounds(0, 0, 108, 362);
-	    frame.getContentPane().add(panel);
-	    panel.setLayout(null);
-
-	    JButton HomeButton = new JButton("Home");
+        JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	UserPage.dispose(); // Dispose the current frame
 	        	Home.main(null);
 	        }
 	    });
@@ -80,7 +76,7 @@ public class User
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	UserPage.dispose(); // Dispose the current frame
 	            Scan.main(null);
 	        }
 	    });
@@ -92,7 +88,7 @@ public class User
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	UserPage.dispose(); // Dispose the current frame
 	            Result.main(null);
 	        }
 	    });
@@ -104,7 +100,7 @@ public class User
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	UserPage.dispose(); // Dispose the current frame
 	            User.main(null);
 	        }
 	    });
@@ -116,38 +112,117 @@ public class User
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frame.dispose(); // Dispose the current frame
+	        	UserPage.dispose(); // Dispose the current frame
 	            Contacts.main(null);
 	        }
 	    });
-	}
-	
-	private void displayText(JTextArea textArea) 
-	{
 	    
+        
+        textField = new JTextField();
+        textField.setBounds(205, 31, 171, 23);
+        UserPage.getContentPane().add(textField);
+        textField.setColumns(10);
 
-	    textArea.setText("\t\t         Users!\r\n\r\n\r\n\r\n   "
-	    		
-	    				+ "The aim for this Application is to provide our Users with a way to Scan their Network, and keep track of the devices and users that may be connected. "
-	    				+ "The application also displays the information found from the performed scan and allows the you to view each device and its necessary information. \r\n   "
-	    				+ "The hope is to allow the User to have their own Home Network Security \r\n\r\n\r\n   "
-	    				
-	    				+ "When on a different Page, the 'Home' button will bring you back to this page. \r\n\r\n\r\n   "
-	    				
-	    				+ "The 'Scan' button brings you to a seperate page that when the main button is pressed, it will use Nmap (A Network Scanner). "
-	    				+ "This will perform an intense scan on your entire network. This scan performs best when all devices in the household is powered on before commencing the scan.\r\n   "
-	    				+ "Once the scan is finished it will open another page that will show you any devices found in the scan and the information found for each device. "
-	    				
-	    				+ "The issue with Nmap is that it may not be very accurate so apologies if there is missing information.\r\n\r\n\r\n   "
-	    				
-	    				+ "The 'Results' button brings you to a seperate page that displays the results performed by the Scan. If there was no scan performed, the Results tab will prompt the user to perform a Scan before viewing results.\r\n\r\n\r\n   The 'Users' Button will allow you to keep track of the users that you have on the network. You will be able to crate a user so that it is saved and recoded. You will then be able to mark each user as Permanent or Temporary,\r\n   depending on whether they are visiting or living in the household. It is advisable to keep this record updated as it can help secure your Network.\r\n\r\n\r\n   "
-	    				
-	    				+ "The 'Contact' Button will show you the contact information for the Developer. If you have any issues or quesries, please contact us.\r\n");
-	}
+        JComboBox<Object> comboBox = new JComboBox<Object>();
+        comboBox.setModel(new DefaultComboBoxModel<Object>(new String[] { "Permanent", "Temporary" }));
+        comboBox.setBounds(402, 31, 125, 23);
+        UserPage.getContentPane().add(comboBox);
 
-	public Window getFrame() 
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+        table = new JTable();
+        table.setModel(new DefaultTableModel(
+            new Object[][] 
+            {
+            },
+            new String[]     
+            {
+                "Name", "Type", "Button"
+            }
+        ));
+        table.setBounds(118, 65, 655, 285);
+        UserPage.getContentPane().add(table);
+        table.setEnabled(false);
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        
+        // Read data from file and add to table model
+        try (Scanner scanner = new Scanner(new File("myusers.txt"))) 
+        {
+            while (scanner.hasNextLine()) 
+            {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                model.addRow(new Object[] { parts[0], parts[1], "Click to Delete User" });
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
+
+        // Add mouse listener to table
+        table.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseClicked(MouseEvent e) 
+            {
+                int row = table.rowAtPoint(e.getPoint());
+                int column = table.columnAtPoint(e.getPoint());
+
+                // Check if third cell is clicked
+                if (column == 2) {
+                    // Remove row
+                    model.removeRow(row);
+                    
+                    // Update file
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("myusers.txt")))
+                    {
+                        for (int i = 0; i < model.getRowCount(); i++) {
+                            bw.write(model.getValueAt(i, 0) + "," + model.getValueAt(i, 1));
+                            bw.newLine();
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+        JButton btnNewButton = new JButton("Add User");
+        btnNewButton.setBounds(573, 31, 89, 23);
+        UserPage.getContentPane().add(btnNewButton);
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = textField.getText();
+                if (name.isEmpty()) 
+                {
+                    JOptionPane.showMessageDialog(UserPage, "Please enter a name");
+                } 
+                else 
+                {
+                    String type = comboBox.getSelectedItem().toString();
+                    model.addRow(new Object[] { name, type });
+
+                    // Update file
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("myusers.txt", true))) 
+                    {
+                        bw.write(name + "," + type);
+                        bw.newLine();
+                    } 
+                    catch (IOException e1) 
+                    {
+                        e1.printStackTrace();
+                    }
+
+                    // Clear text field and update table
+                    textField.setText("");
+                    table.setModel(model);
+                    UserPage.dispose(); // Dispose the current frame
+    	            User.main(null);
+                }
+            }
+        });
+
+    }
 }
