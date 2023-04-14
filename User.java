@@ -3,6 +3,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -59,9 +60,9 @@ public class User
         panel.setBounds(0, 0, 108, 362);
         UserPage.getContentPane().add(panel);
         panel.setLayout(null);
-
-        //Creates Buttons and Sets Action Listeners to them
-        JButton HomeButton = new JButton("Home");
+        
+      //Creates Buttons and Sets Action Listeners to them
+	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
@@ -120,7 +121,7 @@ public class User
 	            Contacts.main(null); //Opens Contacts.java
 	        }
 	    });
-	    
+        
         //Creates a Text Field
         textField = new JTextField();
         textField.setBounds(205, 31, 171, 23);
@@ -151,22 +152,25 @@ public class User
         
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         
-        //Read data from myusers.txt and add to the table
-        try (Scanner scanner = new Scanner(new File("myusers.txt"))) 
-        {
-        	//Makes a Scanner that scans the file for data and splits the words at a ,
-            while (scanner.hasNextLine()) 
-            {
-                String line = scanner.nextLine();
-                String[] parts = line.split(",");
-                //Prints the contents of each word into each cell of the row, and prints "Click to Delete User" in the third cell.
-                model.addRow(new Object[] { parts[0], parts[1], "Click to Delete User" });
-            }
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
+      //Read data from myusers.txt and add to the table
+      String userHomeDirectory = System.getProperty("user.home");
+      String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
+      File file = new File(filePath);
+
+      try (Scanner scanner = new Scanner(file)) 
+      {
+          while (scanner.hasNextLine()) 
+          {
+              String line = scanner.nextLine();
+              String[] parts = line.split(",");
+              model.addRow(new Object[]{parts[0], parts[1], "Click to Delete User"});
+          }
+      } 
+      catch (FileNotFoundException e) 
+      {
+          e.printStackTrace();
+      }
+
 
 
         // Add mouse listener to the Third cell of each row.
@@ -181,25 +185,29 @@ public class User
                 // Check if third cell is clicked.
                 if (column == 2) 
                 {
-                    //Remove row from Table.
-                    model.removeRow(row);
-                    
-                    //Update "myusers.txt" to remove the user.
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("myusers.txt")))
-                    {
-                        for (int i = 0; i < model.getRowCount(); i++) 
-                        {
-                            bw.write(model.getValueAt(i, 0) + "," + model.getValueAt(i, 1));
-                            bw.newLine();
-                        }
-                    } 
-                    catch (IOException e1) 
-                    {
-                        e1.printStackTrace();
-                    }
+                	// Remove row from table
+                	model.removeRow(row);
+
+                	// Update "myusers.txt" to remove the user
+                	String userHomeDirectory = System.getProperty("user.home");
+                	String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
+                	File file = new File(filePath);
+
+                	try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) 
+                	{
+                	    for (int i = 0; i < model.getRowCount(); i++) 
+                	    {
+                	        bw.write(model.getValueAt(i, 0) + "," + model.getValueAt(i, 1));
+                	        bw.newLine();
+                	    }
+                	} 
+                	catch (IOException e1) 
+                	{
+                	    e1.printStackTrace();
+                	}
+
                 }
             }
-
         });
 
         //Adds a button to Add a user into the table.
@@ -223,7 +231,11 @@ public class User
                     model.addRow(new Object[] { name, type });
 
                     //Updates "myusers.txt"
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("myusers.txt", true))) 
+                    String userHomeDirectory = System.getProperty("user.home");
+                    String filePath = userHomeDirectory + "/Project/myusers.txt";
+                    File file = new File(filePath);
+
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
                     {
                         bw.write(name + "," + type);
                         bw.newLine();
@@ -232,6 +244,7 @@ public class User
                     {
                         e1.printStackTrace();
                     }
+
 
                     //Clear text field and update table
                     textField.setText("");
