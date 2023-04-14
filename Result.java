@@ -1,4 +1,7 @@
 import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -6,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -53,8 +57,65 @@ public class Result
         panel.setLayout(null);
 
         JButton HomeButton = new JButton("Home");
-        HomeButton.setBounds(10, 11, 89, 23);
-        panel.add(HomeButton);
+	    HomeButton.setBounds(10, 11, 89, 23);
+	    panel.add(HomeButton);
+	    HomeButton.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	        	ScanResults.dispose(); // Dispose the current frame
+	        	Home.main(null);
+	        }
+	    });
+
+	    JButton ScanButton = new JButton("Scan");
+	    ScanButton.setBounds(10, 45, 89, 23);
+	    panel.add(ScanButton);
+	    ScanButton.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	        	ScanResults.dispose(); // Dispose the current frame
+	            Scan.main(null);
+	        }
+	    });
+
+	    JButton ResultButton = new JButton("Results");
+	    ResultButton.setBounds(10, 79, 89, 23);
+	    panel.add(ResultButton);
+	    ResultButton.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	        	ScanResults.dispose(); // Dispose the current frame
+	            Result.main(null);
+	        }
+	    });
+
+	    JButton UserButton = new JButton("User");
+	    UserButton.setBounds(10, 113, 89, 23);
+	    panel.add(UserButton);
+	    UserButton.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	        	ScanResults.dispose(); // Dispose the current frame
+	            User.main(null);
+	        }
+	    });
+	    
+	    JButton ContactButton = new JButton("Contact");
+	    ContactButton.setBounds(10, 257, 89, 23);
+	    panel.add(ContactButton);
+	    ContactButton.addActionListener(new ActionListener() 
+	    {
+	        public void actionPerformed(ActionEvent e) 
+	        {
+	        	ScanResults.dispose(); // Dispose the current frame
+	            Contacts.main(null);
+	        }
+	    });
+	    
         
 
         // Call displayText() method here
@@ -78,8 +139,6 @@ public class Result
             model.addColumn("MAC Address");
             model.addColumn("OS");
             model.addColumn("Manufacturer");
-
-            
             
             displayText(model);
             
@@ -93,15 +152,39 @@ public class Result
             table.setEnabled(false);
             table.setCellSelectionEnabled(true);
             table.setShowVerticalLines(false);
-
             table.addMouseListener(new MouseAdapter() 
             {
-                public void mouseClicked(MouseEvent e) 
+            	public void mouseClicked(MouseEvent e) 
                 {
-                    // Your code for handling the mouse click goes here
-                }
-            });
+                    int row = table.rowAtPoint(e.getPoint());
+                    int col = table.columnAtPoint(e.getPoint());
+                    if (row >= 0 && col >= 0) 
+                    {
+                        // Get the values in the clicked row
+                        Object[] rowData = new Object[table.getColumnCount()];
+                        for (int i = 0; i < rowData.length; i++) 
+                        {
+                            rowData[i] = table.getValueAt(row, i);
+                        }
 
+                        // Create a new JFrame to display the information
+                        JFrame frame = new JFrame();
+                        frame.setTitle("Information for Row " + (row + 1));
+
+                        // Create a JPanel to hold the information
+                        JPanel panel = new JPanel(new GridLayout(0, 2));
+                        for (int i = 0; i < table.getColumnCount(); i++) 
+                        {
+                            panel.add(new JLabel(table.getColumnName(i)));
+                            panel.add(new JLabel(rowData[i].toString()));
+                        }
+                        frame.add(panel);
+                        frame.pack();
+                        frame.setVisible(true);
+                    }
+                }
+            }
+            );
             
             // Disable column reordering
             TableColumnModel columnModel = table.getColumnModel();
@@ -112,7 +195,6 @@ public class Result
             
             scrollPane.setViewportView(table);
 
-
         }
         
         // This else statement Prints "Please do a Network Scan" if the nmap_output.txt is not found
@@ -121,7 +203,7 @@ public class Result
             JTextArea textArea = new JTextArea("Please do a Network Scan");
             textArea.setEditable(false); // Sets the text area to be uneditable
             JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setBounds(108, 0, 928, 400);
+            scrollPane.setBounds(109, 0, 1500, 400);
             ScanResults.getContentPane().add(scrollPane);
         }
     }
@@ -130,7 +212,8 @@ public class Result
         try {
             File file = new File("nmap_output.txt");
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
+            {
 				String line;
 				String deviceName = "";
 				String ipAddress = "";
@@ -196,11 +279,10 @@ public class Result
 				    }
 				    model.addRow(new Object[] { deviceName, ipAddress, macAddress, osDetails, manufacturer });
 				}
+				
 			}
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 }
