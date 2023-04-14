@@ -191,8 +191,7 @@ public class Result
                         frame.setVisible(true);
                     }
                 }
-            }
-            );
+            });
             
             //Disable column reordering
             TableColumnModel columnModel = table.getColumnModel();
