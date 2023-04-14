@@ -58,8 +58,8 @@ public class Result
         ScanResults.getContentPane().add(panel);
         panel.setLayout(null);
 
-        //Creates Buttons and Sets Action Listeners to them
-        JButton HomeButton = new JButton("Home");
+      //Creates Buttons and Sets Action Listeners to them
+	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
@@ -119,11 +119,12 @@ public class Result
 	        }
 	    });
 	    
-        
 
-        //Call displayText() method here
-        File file = new File("nmap_output.txt");
-        
+		//Call displayText() method here
+
+	    String userHomeDirectory = System.getProperty("user.home");
+	    String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "nmap_output.txt";
+	    File file = new File(filePath);
         //Checks if the file "nmap_output.txt" exists
         if (file.exists()) 
         {
@@ -187,6 +188,7 @@ public class Result
                             panel.add(new JLabel(rowData[i].toString()));
                         }
                         frame.add(panel);
+                	    frame.setBounds(100, 100, 100, 100);
                         frame.pack();
                         frame.setVisible(true);
                     }
@@ -203,7 +205,6 @@ public class Result
             scrollPane.setViewportView(table);
 
         }
-        
         //This else statement Prints "Please do a Network Scan" if the nmap_output.txt is not found
         else 
         {
@@ -219,7 +220,9 @@ public class Result
     {
         try 
         {
-            File file = new File("nmap_output.txt");
+        	String userHomeDirectory = System.getProperty("user.home");
+    	    String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "nmap_output.txt";
+    	    File file = new File(filePath);
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
             {
@@ -281,7 +284,6 @@ public class Result
 				//Adds the Device that performs the scan to the table
 				if (!deviceName.isEmpty()) 
 				{
-					//Removes the text within brackets from the MAC Address column and add it to the Manufacturer column e.g 00:F3:61:A3:E4:B4(Amazon Technologies)
 				    int startIndex = macAddress.indexOf("(");
 				    int endIndex = macAddress.indexOf(")");
 				    if (startIndex != -1 && endIndex != -1) 
