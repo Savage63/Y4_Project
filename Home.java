@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -13,7 +12,7 @@ public class Home
 	private JFrame HomePage;
 
 
-	//Launch the application.
+	//Launches the application.
 	public static void main(String[] args) 
 	{
 		EventQueue.invokeLater(new Runnable() 
@@ -33,34 +32,37 @@ public class Home
 		});
 	}
 
- 	//Create the application.
+ 	//Creates the application.
 	public Home() 
 	{ 
 	
+		//Create The GUI Frame
 	    HomePage = new JFrame();
 	    HomePage.setTitle("Home Page");
 	    HomePage.setBounds(100, 100, 799, 400);
 	    HomePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    HomePage.getContentPane().setLayout(null);
 
-	    // Add a JScrollPane to the content pane
+	    //Adds a JScrollPane to the GUI Frame
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(107, 11, 676, 351);
 	    HomePage.getContentPane().add(scrollPane);
 
-	    // Create a new JTextArea and add it to the JScrollPane
-	    JTextArea txtrWelcomeToThe = new JTextArea();
-	    txtrWelcomeToThe.setEditable(false);
-	    scrollPane.setViewportView(txtrWelcomeToThe);
+	    //Creates a new JTextArea and adds it to the JScrollPane
+	    JTextArea HomeText = new JTextArea();
+	    HomeText.setEditable(false);
+	    scrollPane.setViewportView(HomeText);
 
-	    // Call the displayText() method to set the text of the JTextArea
-	    displayText(txtrWelcomeToThe);
+	    //Calls the displayText() method to set the text in the JTextArea
+	    displayText(HomeText);
 
+	    //Creates a Panel in the JFrame
 	    JPanel panel = new JPanel();
 	    panel.setBounds(0, 0, 108, 362);
 	    HomePage.getContentPane().add(panel);
 	    panel.setLayout(null);
 
+	    //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
@@ -68,8 +70,8 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	HomePage.dispose(); // Dispose the current frame
-	        	Home.main(null);
+	        	HomePage.dispose(); //Closes the current frame
+	        	Home.main(null); //Opens Home.java
 	        }
 	    });
 
@@ -80,8 +82,8 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	HomePage.dispose(); // Dispose the current frame
-	            Scan.main(null);
+	        	HomePage.dispose(); //Closes the current frame
+	            Scan.main(null); //Opens Scan.java
 	        }
 	    });
 
@@ -92,8 +94,8 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	HomePage.dispose(); // Dispose the current frame
-	            Result.main(null);
+	        	HomePage.dispose(); //Closes the current frame
+	            Result.main(null); //Opens Result.java
 	        }
 	    });
 
@@ -104,8 +106,8 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	HomePage.dispose(); // Dispose the current frame
-	            User.main(null);
+	        	HomePage.dispose(); //Closes the current frame
+	            User.main(null); //Opens User.java
 	        }
 	    });
 	    
@@ -116,8 +118,8 @@ public class Home
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	HomePage.dispose(); // Dispose the current frame
-	            Contacts.main(null);
+	        	HomePage.dispose(); //Closes the current frame
+	            Contacts.main(null); //Opens Contacts.java
 	        }
 	    });
 	}
@@ -125,7 +127,7 @@ public class Home
 	private void displayText(JTextArea textArea) 
 	{
 	    
-
+		//Sets the text Displayed in the JTextArea
 	    textArea.setText("\t\t         	Welcome to the Home Page!\r\n\r\n\r\n\r\n   "
 	    		
 	    				+ "The aim for this Application is to provide our Users with a way to Scan their Network, and keep track of the devices and users that may be connected. "
@@ -143,11 +145,5 @@ public class Home
 	    				+ "The 'Results' button brings you to a seperate page that displays the results performed by the Scan. If there was no scan performed, the Results tab will prompt the user to perform a Scan before viewing results.\r\n\r\n\r\n   The 'Users' Button will allow you to keep track of the users that you have on the network. You will be able to crate a user so that it is saved and recoded. You will then be able to mark each user as Permanent or Temporary,\r\n   depending on whether they are visiting or living in the household. It is advisable to keep this record updated as it can help secure your Network.\r\n\r\n\r\n   "
 	    				
 	    				+ "The 'Contact' Button will show you the contact information for the Developer. If you have any issues or quesries, please contact us.\r\n");
-	}
-
-	public Window getFrame() 
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
