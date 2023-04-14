@@ -1,8 +1,6 @@
 import java.awt.EventQueue;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -13,8 +11,7 @@ public class Contacts
 {
 	private JFrame frmContactInformation;
 
-
-	//Launch the application.
+	//Launches the application.
 	public static void main(String[] args) 
 	{
 		EventQueue.invokeLater(new Runnable() 
@@ -34,34 +31,36 @@ public class Contacts
 		});
 	}
 
- 	//Create the application.
+ 	//Creates the application.
 	public Contacts() 
 	{ 
-		
+		//Creates The GUI Frame
 	    frmContactInformation = new JFrame();
 	    frmContactInformation.setTitle("Contact Information");
 	    frmContactInformation.setBounds(100, 100, 799, 400);
 	    frmContactInformation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frmContactInformation.getContentPane().setLayout(null);
 
-	    // Add a JScrollPane to the content pane
+	    //Adds a JScrollPane to the GUI Frame
 	    JScrollPane scrollPane = new JScrollPane();
 	    scrollPane.setBounds(107, 11, 676, 351);
 	    frmContactInformation.getContentPane().add(scrollPane);
 
-	    // Create a new JTextArea and add it to the JScrollPane
+	    //Creates a new JTextArea and adds it to the JScrollPane
 	    JTextArea txtrWelcomeToThe = new JTextArea();
 	    txtrWelcomeToThe.setEditable(false);
 	    scrollPane.setViewportView(txtrWelcomeToThe);
 
-	    // Call the displayText() method to set the text of the JTextArea
+	    //Calls the displayText() method to set the text in the JTextArea
 	    displayText(txtrWelcomeToThe);
 
+	    //Creates a Panel in the JFrame
 	    JPanel panel = new JPanel();
 	    panel.setBounds(0, 0, 108, 362);
 	    frmContactInformation.getContentPane().add(panel);
 	    panel.setLayout(null);
 
+	    //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
@@ -69,8 +68,8 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frmContactInformation.dispose(); // Dispose the current frame
-	        	Home.main(null);
+	        	frmContactInformation.dispose(); //Closes the current frame
+	        	Home.main(null); //Opens Home.java
 	        }
 	    });
 
@@ -81,8 +80,8 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frmContactInformation.dispose(); // Dispose the current frame
-	            Scan.main(null);
+	        	frmContactInformation.dispose(); //Closes the current frame
+	            Scan.main(null); //Opens Scan.java
 	        }
 	    });
 
@@ -93,8 +92,8 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frmContactInformation.dispose(); // Dispose the current frame
-	            Result.main(null);
+	        	frmContactInformation.dispose(); //Closes the current frame
+	            Result.main(null); //Opens Result.java
 	        }
 	    });
 
@@ -105,8 +104,8 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frmContactInformation.dispose(); // Dispose the current frame
-	            User.main(null);
+	        	frmContactInformation.dispose(); //Closes the current frame
+	            User.main(null); //Opens User.java
 	        }
 	    });
 	    
@@ -117,8 +116,8 @@ public class Contacts
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	frmContactInformation.dispose(); // Dispose the current frame
-	            Contacts.main(null);
+	        	frmContactInformation.dispose(); //Closes the current frame
+	            Contacts.main(null); //Opens Contacts.java
 	        }
 	    });
 	}
@@ -126,7 +125,7 @@ public class Contacts
 	private void displayText(JTextArea textArea) 
 	{
 	    
-
+		//Sets the text Displayed in the JTextArea
 	    textArea.setText("\t\t         	Contact Details\r\n\r\n\r\n\r\n   "
 	    		
 						+ "Name: Luke Savage \r\n   "
@@ -137,11 +136,5 @@ public class Contacts
 	    				+ "College: SETU Carlow - Cybercrime & IT Security (Year 4)  \r\n\r\n\r\n   "
 	    				
 	    				+ "Mobile: 0851009470\n\n\n");
-	}
-
-	public Window getFrame() 
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
