@@ -22,7 +22,7 @@ public class Result
 {
     private JFrame ScanResults;
 
- // Launch the application.
+    //Launches the application.
     public static void main(String[] args) 
     {
         EventQueue.invokeLater(new Runnable() 
@@ -42,20 +42,23 @@ public class Result
         });
     }
 
-    // Create the application.
+    //Creates the application.
     public Result() 
     {
+    	//Creates The GUI Frame
         ScanResults = new JFrame();
         ScanResults.setTitle("Scan Results");
         ScanResults.setBounds(100, 100, 1624, 400);
         ScanResults.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanResults.getContentPane().setLayout(null);
 
+        //Creates a Panel in the JFrame
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 108, 361);
         ScanResults.getContentPane().add(panel);
         panel.setLayout(null);
 
+        //Creates Buttons and Sets Action Listeners to them
         JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
@@ -63,8 +66,8 @@ public class Result
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	ScanResults.dispose(); // Dispose the current frame
-	        	Home.main(null);
+	        	ScanResults.dispose(); //Closes the current frame
+	        	Home.main(null); //Opens Home.java
 	        }
 	    });
 
@@ -75,8 +78,8 @@ public class Result
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	ScanResults.dispose(); // Dispose the current frame
-	            Scan.main(null);
+	        	ScanResults.dispose(); //Closes the current frame
+	            Scan.main(null); //Opens Scan.java
 	        }
 	    });
 
@@ -87,8 +90,8 @@ public class Result
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	ScanResults.dispose(); // Dispose the current frame
-	            Result.main(null);
+	        	ScanResults.dispose(); //Closes the current frame
+	            Result.main(null); //Opens Result.java
 	        }
 	    });
 
@@ -99,8 +102,8 @@ public class Result
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	ScanResults.dispose(); // Dispose the current frame
-	            User.main(null);
+	        	ScanResults.dispose(); //Closes the current frame
+	            User.main(null); //Opens User.java
 	        }
 	    });
 	    
@@ -111,15 +114,17 @@ public class Result
 	    {
 	        public void actionPerformed(ActionEvent e) 
 	        {
-	        	ScanResults.dispose(); // Dispose the current frame
-	            Contacts.main(null);
+	        	ScanResults.dispose(); //Closes the current frame
+	            Contacts.main(null); //Opens Contacts.java
 	        }
 	    });
 	    
         
 
-        // Call displayText() method here
+        //Call displayText() method here
         File file = new File("nmap_output.txt");
+        
+        //Checks if the file "nmap_output.txt" exists
         if (file.exists()) 
         {
             DefaultTableModel model = new DefaultTableModel()
@@ -129,11 +134,11 @@ public class Result
 				@Override
                 public boolean isCellEditable(int row, int column) 
 				{
-                    return false; // make cells uneditable
+                    return false; //make cells uneditable
                 }
             };
             
-            // Set the column headers of the JTable
+            //Sets the column headers of the JTable
             model.addColumn("Device Name");
             model.addColumn("IP Address");
             model.addColumn("MAC Address");
@@ -142,6 +147,7 @@ public class Result
             
             displayText(model);
             
+            //Creates a Scroll Pane
             JScrollPane scrollPane = new JScrollPane();
             scrollPane.setBounds(109, 0, 1500, 400);
             ScanResults.getContentPane().add(scrollPane);
@@ -152,6 +158,8 @@ public class Result
             table.setEnabled(false);
             table.setCellSelectionEnabled(true);
             table.setShowVerticalLines(false);
+            
+            //Creates a mouse Listener for when a user clicks on a cell in the Table and opens a new page displaying the information in that Row.
             table.addMouseListener(new MouseAdapter() 
             {
             	public void mouseClicked(MouseEvent e) 
@@ -160,18 +168,18 @@ public class Result
                     int col = table.columnAtPoint(e.getPoint());
                     if (row >= 0 && col >= 0) 
                     {
-                        // Get the values in the clicked row
+                        //Get the values in the clicked row
                         Object[] rowData = new Object[table.getColumnCount()];
                         for (int i = 0; i < rowData.length; i++) 
                         {
                             rowData[i] = table.getValueAt(row, i);
                         }
 
-                        // Create a new JFrame to display the information
+                        //Create a new JFrame to display the information
                         JFrame frame = new JFrame();
                         frame.setTitle("Information for Row " + (row + 1));
 
-                        // Create a JPanel to hold the information
+                        //Create a JPanel to hold the information
                         JPanel panel = new JPanel(new GridLayout(0, 2));
                         for (int i = 0; i < table.getColumnCount(); i++) 
                         {
@@ -186,7 +194,7 @@ public class Result
             }
             );
             
-            // Disable column reordering
+            //Disable column reordering
             TableColumnModel columnModel = table.getColumnModel();
             columnModel.setColumnSelectionAllowed(false);
             columnModel.getColumn(0).setResizable(false);
@@ -197,7 +205,7 @@ public class Result
 
         }
         
-        // This else statement Prints "Please do a Network Scan" if the nmap_output.txt is not found
+        //This else statement Prints "Please do a Network Scan" if the nmap_output.txt is not found
         else 
         {
             JTextArea textArea = new JTextArea("Please do a Network Scan");
@@ -208,8 +216,10 @@ public class Result
         }
     }
 
-    private void displayText(DefaultTableModel model) {
-        try {
+    private void displayText(DefaultTableModel model) 
+    {
+        try 
+        {
             File file = new File("nmap_output.txt");
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) 
@@ -222,11 +232,12 @@ public class Result
 				String manufacturer = "";
 				while ((line = reader.readLine()) != null) 
 				{
+					//Checks for lines that start with "Nmap scan report for " which is the same line as all of the Device Names in the "nmap_output.txt" file.
 				    if (line.startsWith("Nmap scan report for ")) 
 				    {
 				        if (!deviceName.isEmpty()) 
 				        {
-				            // remove the text within brackets from the MAC Address column and add it to the Manufacturer column e.g 00:F3:61:A3:E4:B4(Amazon Technologies)
+				            //Removes the text within brackets from the MAC Address column and add it to the Manufacturer column e.g 00:F3:61:A3:E4:B4(Amazon Technologies)
 				            int startIndex = macAddress.indexOf("(");
 				            int endIndex = macAddress.indexOf(")");
 				            if (startIndex != -1 && endIndex != -1) 
@@ -237,7 +248,7 @@ public class Result
 				            model.addRow(new Object[] { deviceName, ipAddress, macAddress, osDetails, manufacturer });
 				        }
 				        
-				        // remove the text within brackets from the Device Name column and add it to the IP Address column e.g Samsung-S20.station(192.168.1.4)
+				        //Removes the text within brackets from the Device Name column and add it to the IP Address column e.g Samsung-S20.station(192.168.1.4)
 				        deviceName = line.substring(21);
 				        int startIndex = deviceName.indexOf("(");
 				        int endIndex = deviceName.indexOf(")");
@@ -246,7 +257,7 @@ public class Result
 				            ipAddress = deviceName.substring(startIndex + 1, endIndex);
 				            deviceName = deviceName.substring(0, startIndex).trim();
 				        } 
-				        //If no brackets are found (No device is available) It sets the IP Address to the same Variable
+				        //If no brackets are found (No Device Name is available) it sets the IP Address to the same Variable
 				        else 
 				        {
 				            ipAddress = deviceName;
@@ -256,20 +267,22 @@ public class Result
 				        osDetails = "";
 				        manufacturer = "";
 				    } 
+				    //Checks for the MAC Address
 				    else if (line.startsWith("MAC Address: ")) 
 				    {
 				        macAddress = line.substring(13);
 				    } 
+				    //Checks for the Operating System of the Device
 				    else if (line.startsWith("OS details: ")) 
 				    {
 				        osDetails = line.substring(12);
 				    }
 				    
 				}
-				//Add the Device that performs the scan to the table
+				//Adds the Device that performs the scan to the table
 				if (!deviceName.isEmpty()) 
 				{
-					// remove the text within brackets from the MAC Address column and add it to the Manufacturer column e.g 00:F3:61:A3:E4:B4(Amazon Technologies)
+					//Removes the text within brackets from the MAC Address column and add it to the Manufacturer column e.g 00:F3:61:A3:E4:B4(Amazon Technologies)
 				    int startIndex = macAddress.indexOf("(");
 				    int endIndex = macAddress.indexOf(")");
 				    if (startIndex != -1 && endIndex != -1) 
@@ -281,7 +294,9 @@ public class Result
 				}
 				
 			}
-        } catch (IOException e) {
+        } 
+        catch (IOException e) 
+        {
             e.printStackTrace();
         }
     }
