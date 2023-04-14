@@ -18,7 +18,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultComboBoxModel;
 
-public class User 
+public class User
 {
     private JFrame UserPage;
     private JTextField textField;
@@ -31,7 +31,8 @@ public class User
         {
             public void run() 
             {
-                try {
+                try 
+                {
                     User window = new User();
                     window.UserPage.setVisible(true);
                 } 
