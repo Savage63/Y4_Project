@@ -62,8 +62,10 @@ public class Scan
                     //Builds the Nmap command with the IP address to scan
                     ProcessBuilder pb = new ProcessBuilder("nmap", "-sS", "-O", networkAddress);
 
-                    //Redirects Nmap output to a file called "nmap_output.txt"
-                    File outputFile = new File("nmap_output.txt");
+                    //Creates folder called Project and Redirects Nmap output to a file called "nmap_output.txt" in the home directory
+                    File projectDir = new File(System.getProperty("user.home"), "Project");
+                    projectDir.mkdir(); // create the directory if it does not exist
+                    File outputFile = new File(projectDir, "nmap_output.txt");
                     pb.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
 
                     //Starts the Nmap process
@@ -91,7 +93,7 @@ public class Scan
         panel.setLayout(null);
 
       //Creates Buttons and Sets Action Listeners to them
-        JButton HomeButton = new JButton("Home");
+	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 11, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
@@ -150,6 +152,7 @@ public class Scan
 	            Contacts.main(null); //Opens Contacts.java
 	        }
 	    });
+	    
 
         JEditorPane editorPane = new JEditorPane();
         editorPane.setEditable(false);
