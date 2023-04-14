@@ -9,17 +9,24 @@ import javax.swing.JFrame;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
-public class Scan {
+public class Scan 
+{
     JFrame ScanPage;
 
     //Launches the application.
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
+    public static void main(String[] args) 
+    {
+        EventQueue.invokeLater(new Runnable() 
+        {
+            public void run() 
+            {
+                try 
+                {
                     Scan window = new Scan();
                     window.ScanPage.setVisible(true);
-                } catch (Exception e) {
+                } 
+                catch (Exception e) 
+                {
                     e.printStackTrace();
                 }
             }
