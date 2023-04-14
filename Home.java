@@ -124,7 +124,7 @@ public class Home
 	    });
 	}
 	
-	private void displayText(JTextArea textArea) 
+	private void displayText(JTextArea textArea)
 	{
 	    
 		//Sets the text Displayed in the JTextArea
