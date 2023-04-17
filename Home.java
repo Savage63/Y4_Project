@@ -39,13 +39,13 @@ public class Home
 		//Create The GUI Frame
 	    HomePage = new JFrame();
 	    HomePage.setTitle("Home Page");
-	    HomePage.setBounds(100, 100, 799, 400);
+	    HomePage.setBounds(100, 100, 1189, 551);
 	    HomePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    HomePage.getContentPane().setLayout(null);
 
 	    //Adds a JScrollPane to the GUI Frame
 	    JScrollPane scrollPane = new JScrollPane();
-	    scrollPane.setBounds(107, 11, 676, 351);
+	    scrollPane.setBounds(107, 11, 1066, 501);
 	    HomePage.getContentPane().add(scrollPane);
 
 	    //Creates a new JTextArea and adds it to the JScrollPane
@@ -58,13 +58,13 @@ public class Home
 
 	    //Creates a Panel in the JFrame
 	    JPanel panel = new JPanel();
-	    panel.setBounds(0, 0, 108, 362);
+	    panel.setBounds(0, 0, 108, 512);
 	    HomePage.getContentPane().add(panel);
 	    panel.setLayout(null);
 
 	    //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
-	    HomeButton.setBounds(10, 11, 89, 23);
+	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
 	    {
@@ -76,7 +76,7 @@ public class Home
 	    });
 
 	    JButton ScanButton = new JButton("Scan");
-	    ScanButton.setBounds(10, 45, 89, 23);
+	    ScanButton.setBounds(10, 61, 89, 23);
 	    panel.add(ScanButton);
 	    ScanButton.addActionListener(new ActionListener() 
 	    {
@@ -88,7 +88,7 @@ public class Home
 	    });
 
 	    JButton ResultButton = new JButton("Results");
-	    ResultButton.setBounds(10, 79, 89, 23);
+	    ResultButton.setBounds(10, 95, 89, 23);
 	    panel.add(ResultButton);
 	    ResultButton.addActionListener(new ActionListener() 
 	    {
@@ -100,7 +100,7 @@ public class Home
 	    });
 
 	    JButton UserButton = new JButton("User");
-	    UserButton.setBounds(10, 113, 89, 23);
+	    UserButton.setBounds(10, 129, 89, 23);
 	    panel.add(UserButton);
 	    UserButton.addActionListener(new ActionListener() 
 	    {
@@ -112,7 +112,7 @@ public class Home
 	    });
 	    
 	    JButton ContactButton = new JButton("Contact");
-	    ContactButton.setBounds(10, 257, 89, 23);
+	    ContactButton.setBounds(10, 423, 89, 23);
 	    panel.add(ContactButton);
 	    ContactButton.addActionListener(new ActionListener() 
 	    {
@@ -128,7 +128,7 @@ public class Home
 	{
 	    
 		//Sets the text Displayed in the JTextArea
-	    textArea.setText("\t\t         	Welcome to the Home Page!\r\n\r\n\r\n\r\n   "
+	    textArea.setText("\t\t         			Welcome to the Home Page!\r\n\r\n\r\n\r\n   "
 	    		
 	    				+ "The aim for this Application is to provide our Users with a way to Scan their Network, and keep track of the devices and users that may be connected. "
 	    				+ "The application also displays the information found from the performed scan and allows the you to view each device and its necessary information. \r\n   "
