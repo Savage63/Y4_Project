@@ -38,13 +38,13 @@ public class Scan
     	//Creates The GUI Frame
         ScanPage = new JFrame();
         ScanPage.setTitle("Scanner Page");
-        ScanPage.setBounds(100, 100, 799, 400);
+        ScanPage.setBounds(100, 100, 1189, 551);
         ScanPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanPage.getContentPane().setLayout(null);
 
         //Add a button to the content pane using absolute layout
         JButton ScanNetworkButton = new JButton("Scan Network");
-        ScanNetworkButton.setBounds(247, 96, 344, 138);
+        ScanNetworkButton.setBounds(406, 149, 400, 166);
         ScanPage.getContentPane().add(ScanNetworkButton);
         ScanNetworkButton.addActionListener(new ActionListener() 
         {
@@ -87,14 +87,15 @@ public class Scan
             }
         });
 
+        //Creates Panel holding the buttons
         JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 108, 362);
+        panel.setBounds(0, 0, 108, 512);
         ScanPage.getContentPane().add(panel);
         panel.setLayout(null);
 
-      //Creates Buttons and Sets Action Listeners to them
+        //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
-	    HomeButton.setBounds(10, 11, 89, 23);
+	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
 	    {
@@ -106,7 +107,7 @@ public class Scan
 	    });
 
 	    JButton ScanButton = new JButton("Scan");
-	    ScanButton.setBounds(10, 45, 89, 23);
+	    ScanButton.setBounds(10, 61, 89, 23);
 	    panel.add(ScanButton);
 	    ScanButton.addActionListener(new ActionListener() 
 	    {
@@ -118,7 +119,7 @@ public class Scan
 	    });
 
 	    JButton ResultButton = new JButton("Results");
-	    ResultButton.setBounds(10, 79, 89, 23);
+	    ResultButton.setBounds(10, 95, 89, 23);
 	    panel.add(ResultButton);
 	    ResultButton.addActionListener(new ActionListener() 
 	    {
@@ -130,7 +131,7 @@ public class Scan
 	    });
 
 	    JButton UserButton = new JButton("User");
-	    UserButton.setBounds(10, 113, 89, 23);
+	    UserButton.setBounds(10, 129, 89, 23);
 	    panel.add(UserButton);
 	    UserButton.addActionListener(new ActionListener() 
 	    {
@@ -142,7 +143,7 @@ public class Scan
 	    });
 	    
 	    JButton ContactButton = new JButton("Contact");
-	    ContactButton.setBounds(10, 257, 89, 23);
+	    ContactButton.setBounds(10, 423, 89, 23);
 	    panel.add(ContactButton);
 	    ContactButton.addActionListener(new ActionListener() 
 	    {
@@ -156,7 +157,7 @@ public class Scan
 
         JEditorPane editorPane = new JEditorPane();
         editorPane.setEditable(false);
-        editorPane.setBounds(108, 0, 675, 362);
+        editorPane.setBounds(108, 0, 1065, 512);
         ScanPage.getContentPane().add(editorPane);
     }
 }
