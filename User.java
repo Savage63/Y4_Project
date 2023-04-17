@@ -51,19 +51,19 @@ public class User
     	//Creates The GUI Frame
         UserPage = new JFrame();
         UserPage.setTitle("User Page");
-        UserPage.setBounds(100, 100, 799, 400);
+        UserPage.setBounds(100, 100, 1189, 551);
         UserPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         UserPage.getContentPane().setLayout(null);
 
         //Creates a Panel in the JFrame
         JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 108, 362);
+        panel.setBounds(0, 0, 108, 512);
         UserPage.getContentPane().add(panel);
         panel.setLayout(null);
         
       //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
-	    HomeButton.setBounds(10, 11, 89, 23);
+	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
 	    {
@@ -75,7 +75,7 @@ public class User
 	    });
 
 	    JButton ScanButton = new JButton("Scan");
-	    ScanButton.setBounds(10, 45, 89, 23);
+	    ScanButton.setBounds(10, 61, 89, 23);
 	    panel.add(ScanButton);
 	    ScanButton.addActionListener(new ActionListener() 
 	    {
@@ -87,7 +87,7 @@ public class User
 	    });
 
 	    JButton ResultButton = new JButton("Results");
-	    ResultButton.setBounds(10, 79, 89, 23);
+	    ResultButton.setBounds(10, 95, 89, 23);
 	    panel.add(ResultButton);
 	    ResultButton.addActionListener(new ActionListener() 
 	    {
@@ -99,7 +99,7 @@ public class User
 	    });
 
 	    JButton UserButton = new JButton("User");
-	    UserButton.setBounds(10, 113, 89, 23);
+	    UserButton.setBounds(10, 129, 89, 23);
 	    panel.add(UserButton);
 	    UserButton.addActionListener(new ActionListener() 
 	    {
@@ -111,7 +111,7 @@ public class User
 	    });
 	    
 	    JButton ContactButton = new JButton("Contact");
-	    ContactButton.setBounds(10, 257, 89, 23);
+	    ContactButton.setBounds(10, 423, 89, 23);
 	    panel.add(ContactButton);
 	    ContactButton.addActionListener(new ActionListener() 
 	    {
@@ -124,17 +124,17 @@ public class User
         
         //Creates a Text Field
         textField = new JTextField();
-        textField.setBounds(205, 31, 171, 23);
+        textField.setBounds(269, 31, 251, 23);
         UserPage.getContentPane().add(textField);
         textField.setColumns(10);
 
         //Creates a Drop Box that gives the option 'Permanent' of Temporary'
         JComboBox<Object> comboBox = new JComboBox<Object>();
         comboBox.setModel(new DefaultComboBoxModel<Object>(new String[] { "Permanent", "Temporary" }));
-        comboBox.setBounds(402, 31, 125, 23);
+        comboBox.setBounds(589, 31, 179, 23);
         UserPage.getContentPane().add(comboBox);
 
-        //Creates a JTable that stores the variable in the  Text Field and Drop Box
+        //Creates a JTable that stores the variable in the Text Field and Drop Box
         table = new JTable();
         table.setModel(new DefaultTableModel(
             new Object[][] 
@@ -145,7 +145,7 @@ public class User
                 "Name", "Type", "Button"
             }
         ));
-        table.setBounds(118, 65, 655, 285);
+        table.setBounds(118, 65, 1045, 436);
         UserPage.getContentPane().add(table);
         table.setEnabled(false);
 
@@ -157,10 +157,12 @@ public class User
       String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
       File file = new File(filePath);
 
+      //Scanner reads the file
       try (Scanner scanner = new Scanner(file)) 
       {
           while (scanner.hasNextLine()) 
           {
+        	  //Scanner reads each line of the file and Displays the information into a table.
               String line = scanner.nextLine();
               String[] parts = line.split(",");
               model.addRow(new Object[]{parts[0], parts[1], "Click to Delete User"});
@@ -188,7 +190,7 @@ public class User
                 	// Remove row from table
                 	model.removeRow(row);
 
-                	// Update "myusers.txt" to remove the user
+                	//Update "myusers.txt" to remove the user
                 	String userHomeDirectory = System.getProperty("user.home");
                 	String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
                 	File file = new File(filePath);
@@ -212,47 +214,57 @@ public class User
 
         //Adds a button to Add a user into the table.
         JButton btnNewButton = new JButton("Add User");
-        btnNewButton.setBounds(573, 31, 89, 23);
+        btnNewButton.setBounds(819, 31, 125, 23);
         UserPage.getContentPane().add(btnNewButton);
         btnNewButton.addActionListener(new ActionListener() 
         {
-            public void actionPerformed(ActionEvent e) 
-            {
-                String name = textField.getText();
-                if (name.isEmpty()) 
-                {
-                	//When the button is pressed it will check if the Text Field has any text in it and if no text is found, it will tell the user to enter a name.
-                    JOptionPane.showMessageDialog(UserPage, "Please enter a name");
-                } 
-                else 
-                {
-                	//Takes the Text and the Drop Box and adds them into a file called "myusers.txt"
-                    String type = comboBox.getSelectedItem().toString();
-                    model.addRow(new Object[] { name, type });
+        	public void actionPerformed(ActionEvent e) 
+        	{
+        	    String name = textField.getText(); //Gets the test from the text field.
+        	    if (name.isEmpty()) 
+        	    {
+        	        //When the button is pressed it will check if the Text Field has any text in it and if no text is found, it will tell the user to enter a name.
+        	        JOptionPane.showMessageDialog(UserPage, "Please enter a name");
+        	    } 
+        	    else 
+        	    {
+        	        //Takes the Text and the Drop Box and stores their values
+        	        String type = comboBox.getSelectedItem().toString();
+        	        model.addRow(new Object[] { name, type });
 
-                    //Updates "myusers.txt"
-                    String userHomeDirectory = System.getProperty("user.home");
-                    String filePath = userHomeDirectory + "/Project/myusers.txt";
-                    File file = new File(filePath);
+        	        //Creates folder in home directory if the folder doesn't already exist
+        	        String userHomeDirectory = System.getProperty("user.home");
+        	        String folderPath = userHomeDirectory + "/Project";
+        	        File folder = new File(folderPath);
+        	        
+        	        if (!folder.exists()) 
+        	        {
+        	            folder.mkdir(); // creates the folder if it doesn't already exist
+        	        }
+        	        
+        	        //Creates "myusers.txt" in the folder called Project in the home directory
+        	        String filePath = folderPath + "/myusers.txt";
+        	        File file = new File(filePath);
 
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
-                    {
-                        bw.write(name + "," + type);
-                        bw.newLine();
-                    } 
-                    catch (IOException e1) 
-                    {
-                        e1.printStackTrace();
-                    }
+        	        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
+        	        {
+        	            bw.write(name + "," + type);
+        	            bw.newLine();
+        	        } 
+        	        catch (IOException e1) 
+        	        {
+        	            e1.printStackTrace();
+        	        }
 
 
-                    //Clear text field and update table
-                    textField.setText("");
-                    table.setModel(model);
-                    UserPage.dispose(); //Closes the current frame
-    	            User.main(null); //Opens User.java
-                }
-            }
+        	        //Clear text field and update table
+        	        textField.setText("");
+        	        table.setModel(model);
+        	        UserPage.dispose(); //Closes the current frame
+        	        User.main(null); //Opens User.java
+        	    }
+        	}
+
         });
     }
 }
