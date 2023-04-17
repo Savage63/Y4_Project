@@ -48,19 +48,19 @@ public class Result
     	//Creates The GUI Frame
         ScanResults = new JFrame();
         ScanResults.setTitle("Scan Results");
-        ScanResults.setBounds(100, 100, 1624, 400);
+        ScanResults.setBounds(100, 100, 1624, 551);
         ScanResults.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanResults.getContentPane().setLayout(null);
 
         //Creates a Panel in the JFrame
         JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 108, 361);
+        panel.setBounds(0, 0, 108, 551);
         ScanResults.getContentPane().add(panel);
         panel.setLayout(null);
 
       //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
-	    HomeButton.setBounds(10, 11, 89, 23);
+	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
 	    HomeButton.addActionListener(new ActionListener() 
 	    {
@@ -72,7 +72,7 @@ public class Result
 	    });
 
 	    JButton ScanButton = new JButton("Scan");
-	    ScanButton.setBounds(10, 45, 89, 23);
+	    ScanButton.setBounds(10, 61, 89, 23);
 	    panel.add(ScanButton);
 	    ScanButton.addActionListener(new ActionListener() 
 	    {
@@ -84,7 +84,7 @@ public class Result
 	    });
 
 	    JButton ResultButton = new JButton("Results");
-	    ResultButton.setBounds(10, 79, 89, 23);
+	    ResultButton.setBounds(10, 95, 89, 23);
 	    panel.add(ResultButton);
 	    ResultButton.addActionListener(new ActionListener() 
 	    {
@@ -96,7 +96,7 @@ public class Result
 	    });
 
 	    JButton UserButton = new JButton("User");
-	    UserButton.setBounds(10, 113, 89, 23);
+	    UserButton.setBounds(10, 129, 89, 23);
 	    panel.add(UserButton);
 	    UserButton.addActionListener(new ActionListener() 
 	    {
@@ -108,7 +108,7 @@ public class Result
 	    });
 	    
 	    JButton ContactButton = new JButton("Contact");
-	    ContactButton.setBounds(10, 257, 89, 23);
+	    ContactButton.setBounds(10, 423, 89, 23);
 	    panel.add(ContactButton);
 	    ContactButton.addActionListener(new ActionListener() 
 	    {
@@ -120,12 +120,11 @@ public class Result
 	    });
 	    
 
-		//Call displayText() method here
 
 	    String userHomeDirectory = System.getProperty("user.home");
 	    String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "nmap_output.txt";
 	    File file = new File(filePath);
-        //Checks if the file "nmap_output.txt" exists
+        //Checks if the file "nmap_output.txt" exists if it exists, it will display the information in the file. If not, it will Ask the user to do a scan
         if (file.exists()) 
         {
             DefaultTableModel model = new DefaultTableModel()
@@ -150,7 +149,7 @@ public class Result
             
             //Creates a Scroll Pane
             JScrollPane scrollPane = new JScrollPane();
-            scrollPane.setBounds(109, 0, 1500, 400);
+            scrollPane.setBounds(109, 0, 1500, 510);
             ScanResults.getContentPane().add(scrollPane);
             JTable table = new JTable(model);
             table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // set auto resize mode
@@ -187,7 +186,7 @@ public class Result
                             panel.add(new JLabel(table.getColumnName(i)));
                             panel.add(new JLabel(rowData[i].toString()));
                         }
-                        frame.add(panel);
+                        frame.getContentPane().add(panel);
                 	    frame.setBounds(100, 100, 100, 100);
                         frame.pack();
                         frame.setVisible(true);
@@ -211,7 +210,7 @@ public class Result
             JTextArea textArea = new JTextArea("Please do a Network Scan");
             textArea.setEditable(false); // Sets the text area to be uneditable
             JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setBounds(109, 0, 1500, 400);
+            scrollPane.setBounds(109, 0, 1500, 510);
             ScanResults.getContentPane().add(scrollPane);
         }
     }
