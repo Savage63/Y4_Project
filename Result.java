@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -159,40 +160,28 @@ public class Result
             table.setCellSelectionEnabled(true);
             table.setShowVerticalLines(false);
             
-            //Creates a mouse Listener for when a user clicks on a cell in the Table and opens a new page displaying the information in that Row.
+         // Creates a mouse Listener for when a user clicks on a cell in the Table and opens a new page displaying the information in that Row.
             table.addMouseListener(new MouseAdapter() 
             {
-            	public void mouseClicked(MouseEvent e) 
+                public void mouseClicked(MouseEvent e) 
                 {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
                     if (row >= 0 && col >= 0) 
                     {
-                        //Get the values in the clicked row
+                        // Get the values in the clicked row
                         Object[] rowData = new Object[table.getColumnCount()];
-                        for (int i = 0; i < rowData.length; i++) 
-                        {
+                        for (int i = 0; i < rowData.length; i++) {
                             rowData[i] = table.getValueAt(row, i);
                         }
 
-                        //Create a new JFrame to display the information
-                        JFrame frame = new JFrame();
-                        frame.setTitle("Information for Row " + (row + 1));
-
-                        //Create a JPanel to hold the information
-                        JPanel panel = new JPanel(new GridLayout(0, 2));
-                        for (int i = 0; i < table.getColumnCount(); i++) 
-                        {
-                            panel.add(new JLabel(table.getColumnName(i)));
-                            panel.add(new JLabel(rowData[i].toString()));
-                        }
-                        frame.getContentPane().add(panel);
-                	    frame.setBounds(100, 100, 100, 100);
-                        frame.pack();
-                        frame.setVisible(true);
+                        // Create a new RowInformationPage to display the information
+                        RowInformationPage rowInfoPage = new RowInformationPage(rowData);
+                        rowInfoPage.show();
                     }
                 }
             });
+
             
             //Disable column reordering
             TableColumnModel columnModel = table.getColumnModel();
@@ -231,10 +220,10 @@ public class Result
 				String macAddress = "";
 				String osDetails = "";
 				String manufacturer = "";
-				while ((line = reader.readLine()) != null) 
+				while ((line = reader.readLine()) != null)
 				{
 					//Checks for lines that start with "Nmap scan report for " which is the same line as all of the Device Names in the "nmap_output.txt" file.
-				    if (line.startsWith("Nmap scan report for ")) 
+				    if (line.startsWith("Nmap scan report for "))
 				    {
 				        if (!deviceName.isEmpty()) 
 				        {
