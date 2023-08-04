@@ -1,0 +1,89 @@
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.GridLayout;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class RowInformationPage {
+    private JFrame frame;
+    private JTextArea textArea;
+    private boolean isScanned = false;
+
+    public RowInformationPage(Object[] rowData) {
+        initialize(rowData);
+    }
+
+    private void initialize(Object[] rowData) {
+        frame = new JFrame();
+        frame.setTitle("Information for Row");
+        frame.setBounds(100, 100, 834, 366); // Set the size as desired
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().setLayout(new GridLayout(1, 2)); // 1 row, 2 columns layout
+
+        // Create a JPanel to hold the information (Left side)
+        JPanel infoPanel = new JPanel(); // N rows, 2 columns
+        String[] columnNames = { "Device Name", "IP Address", "MAC Address", "OS", "Manufacturer" };
+        for (int i = 0; i < rowData.length; i++) {
+            JLabel label = new JLabel(columnNames[i] + ":");
+            JLabel valueLabel = new JLabel(rowData[i].toString());
+            infoPanel.add(label);
+            infoPanel.add(valueLabel);
+        }
+
+        frame.getContentPane().add(infoPanel);
+        infoPanel.setLayout(null);
+
+        textArea = new JTextArea();
+        textArea.setEditable(false);
+        textArea.setBounds(593, 11, 215, 305);
+        textArea.setLineWrap(true); // Enable line wrapping for multi-line text
+        infoPanel.add(textArea);
+
+        JButton btnNewButton = new JButton("Resolve Issues");
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Add your action code here for when the "Resolve Issues" button is clicked
+            }
+        });
+        btnNewButton.setBounds(10, 293, 573, 23);
+        infoPanel.add(btnNewButton);
+
+        JPanel displaypanel = new JPanel();
+        displaypanel.setBounds(10, 11, 585, 247); // Adjust the bounds as desired
+        infoPanel.add(displaypanel);
+
+        JButton btnNewButton_1 = new JButton("Scan Device");
+        btnNewButton_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (!isScanned) {
+                    textArea.setText("Device Scan Results:"); // Set the text of the textArea
+                    isScanned = true;
+                } else {
+                    // If the button is pressed a second time, refresh the text field
+                    textArea.setText("Device Scan Results:");
+                }
+            }
+        });
+        btnNewButton_1.setBounds(10, 267, 573, 23);
+        infoPanel.add(btnNewButton_1);
+
+        // Add the device information to the displaypanel
+        displaypanel.setLayout(new GridLayout(rowData.length, 2));
+        for (int i = 0; i < rowData.length; i++) {
+            JLabel label = new JLabel(columnNames[i] + ":");
+            JLabel valueLabel = new JLabel(rowData[i].toString());
+            displaypanel.add(label);
+            displaypanel.add(valueLabel);
+        }
+    }
+
+    public void show() {
+        frame.setVisible(true);
+    }
+
+
+}
