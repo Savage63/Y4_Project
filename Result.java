@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,8 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -59,7 +56,7 @@ public class Result
         ScanResults.getContentPane().add(panel);
         panel.setLayout(null);
 
-      //Creates Buttons and Sets Action Listeners to them
+        //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
@@ -160,7 +157,7 @@ public class Result
             table.setCellSelectionEnabled(true);
             table.setShowVerticalLines(false);
             
-         // Creates a mouse Listener for when a user clicks on a cell in the Table and opens a new page displaying the information in that Row.
+            // Creates a mouse Listener for when a user clicks on a cell in the Table and opens a new page displaying the information in that Row.
             table.addMouseListener(new MouseAdapter() 
             {
                 public void mouseClicked(MouseEvent e) 
