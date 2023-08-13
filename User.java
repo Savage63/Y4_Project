@@ -44,6 +44,9 @@ public class User
             }
         });
     }
+    
+    
+    
 
     //Creates the application.
     public User() 
@@ -61,7 +64,7 @@ public class User
         UserPage.getContentPane().add(panel);
         panel.setLayout(null);
         
-      //Creates Buttons and Sets Action Listeners to them
+        //Creates Buttons and Sets Action Listeners to them
 	    JButton HomeButton = new JButton("Home");
 	    HomeButton.setBounds(10, 27, 89, 23);
 	    panel.add(HomeButton);
@@ -152,28 +155,26 @@ public class User
         
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         
-      //Read data from myusers.txt and add to the table
-      String userHomeDirectory = System.getProperty("user.home");
-      String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
-      File file = new File(filePath);
+        //Read data from myusers.txt and add to the table
+        String userHomeDirectory = System.getProperty("user.home");
+        String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
+        File file = new File(filePath);
 
-      //Scanner reads the file
-      try (Scanner scanner = new Scanner(file)) 
-      {
-          while (scanner.hasNextLine()) 
-          {
-        	  //Scanner reads each line of the file and Displays the information into a table.
-              String line = scanner.nextLine();
-              String[] parts = line.split(",");
-              model.addRow(new Object[]{parts[0], parts[1], "Click to Delete User"});
-          }
-      } 
-      catch (FileNotFoundException e) 
-      {
-          e.printStackTrace();
-      }
-
-
+        //Scanner reads the file
+        try (Scanner scanner = new Scanner(file)) 
+        {
+        	while (scanner.hasNextLine()) 
+        	{
+        		//Scanner reads each line of the file and Displays the information into a table.
+        		String line = scanner.nextLine();
+        		String[] parts = line.split(",");
+        		model.addRow(new Object[]{parts[0], parts[1], "Click to Delete User"});
+        	}
+        } 
+        catch (FileNotFoundException e) 
+        {
+        	e.printStackTrace();
+        }
 
         // Add mouse listener to the Third cell of each row.
         table.addMouseListener(new MouseAdapter() 
@@ -181,90 +182,110 @@ public class User
             @Override
             public void mouseClicked(MouseEvent e) 
             {
-                int row = table.rowAtPoint(e.getPoint());
-                int column = table.columnAtPoint(e.getPoint());
-
-                // Check if third cell is clicked.
-                if (column == 2) 
+                table.addMouseListener(new MouseAdapter() 
                 {
-                	// Remove row from table
-                	model.removeRow(row);
+                    @Override
+                    public void mouseClicked(MouseEvent e) 
+                    {
+                        int row = table.rowAtPoint(e.getPoint());
+                        int column = table.columnAtPoint(e.getPoint());
 
-                	//Update "myusers.txt" to remove the user
-                	String userHomeDirectory = System.getProperty("user.home");
-                	String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
-                	File file = new File(filePath);
+                        if (column == 0 || column == 1) 
+                        {
+                            String userName = model.getValueAt(row, 0).toString();
+                            String userType = model.getValueAt(row, 1).toString();
+                            UserDevicePage.openUserDevicePage(userName, userType);
+                        } 
+                        else if (column == 2) 
+                        {
+                        	// Remove row from table
+                        	model.removeRow(row);
 
-                	try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) 
+                        	// Update "myusers.txt" to remove the user
+                        	String userHomeDirectory = System.getProperty("user.home");
+                        	String filePath = userHomeDirectory + File.separator + "Project" + File.separator + "myusers.txt";
+                        	File file = new File(filePath);
+
+                        	try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) 
+                        	{
+                        		for (int i = 0; i < model.getRowCount(); i++) 
+                        		{
+                        			bw.write(model.getValueAt(i, 0) + "," + model.getValueAt(i, 1));
+                        			bw.newLine();
+                        		}
+                        	} 
+                        	catch (IOException e1) 
+                        	{
+                        		e1.printStackTrace();
+                        	}
+
+                        } 
+                        else if (column == 0 || column == 2) 
+                        {
+                        	// Open UserDevicePage when first or third cell is clicked
+                        	String userName = model.getValueAt(row, 0).toString();
+                        	String userType = model.getValueAt(row, 1).toString();
+                        	UserDevicePage.openUserDevicePage(userName, userType);
+                        }
+                    }
+                });
+
+                //Adds a button to Add a user into the table.
+                JButton btnNewButton = new JButton("Add User");
+                btnNewButton.setBounds(819, 31, 125, 23);
+                UserPage.getContentPane().add(btnNewButton);
+                btnNewButton.addActionListener(new ActionListener() 
+                {
+                	public void actionPerformed(ActionEvent e) 
                 	{
-                	    for (int i = 0; i < model.getRowCount(); i++) 
-                	    {
-                	        bw.write(model.getValueAt(i, 0) + "," + model.getValueAt(i, 1));
-                	        bw.newLine();
-                	    }
-                	} 
-                	catch (IOException e1) 
-                	{
-                	    e1.printStackTrace();
+                		String name = textField.getText(); //Gets the test from the text field.
+                		if (name.isEmpty()) 
+                		{
+                			//When the button is pressed it will check if the Text Field has any text in it and if no text is found, it will tell the user to enter a name.
+                			JOptionPane.showMessageDialog(UserPage, "Please enter a name");
+                		} 
+                		else 
+                		{
+                			//Takes the Text and the Drop Box and stores their values
+                			String type = comboBox.getSelectedItem().toString();
+                			model.addRow(new Object[] { name, type });
+
+                			//Creates folder in home directory if the folder doesn't already exist
+                			String userHomeDirectory = System.getProperty("user.home");
+                			String folderPath = userHomeDirectory + "/Project";
+                			File folder = new File(folderPath);
+        	        
+                			if (!folder.exists()) 
+                			{
+                				folder.mkdir(); // creates the folder if it doesn't already exist
+                			}
+        	        
+                			//Creates "myusers.txt" in the folder called Project in the home directory
+                			String filePath = folderPath + "/myusers.txt";
+                			File file = new File(filePath);
+
+                			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
+                			{
+                				bw.write(name + "," + type);
+                				bw.newLine();
+                			}	 
+                			catch (IOException e1) 
+                			{
+                				e1.printStackTrace();
+                			}
+
+
+                			//Clear text field and update table
+                			textField.setText("");
+                			table.setModel(model);
+                			UserPage.dispose(); //Closes the current frame
+                			User.main(null); //Opens User.java
+                		}
                 	}
 
-                }
+                });
             }
-        });
-
-        //Adds a button to Add a user into the table.
-        JButton btnNewButton = new JButton("Add User");
-        btnNewButton.setBounds(819, 31, 125, 23);
-        UserPage.getContentPane().add(btnNewButton);
-        btnNewButton.addActionListener(new ActionListener() 
-        {
-        	public void actionPerformed(ActionEvent e) 
-        	{
-        	    String name = textField.getText(); //Gets the test from the text field.
-        	    if (name.isEmpty()) 
-        	    {
-        	        //When the button is pressed it will check if the Text Field has any text in it and if no text is found, it will tell the user to enter a name.
-        	        JOptionPane.showMessageDialog(UserPage, "Please enter a name");
-        	    } 
-        	    else 
-        	    {
-        	        //Takes the Text and the Drop Box and stores their values
-        	        String type = comboBox.getSelectedItem().toString();
-        	        model.addRow(new Object[] { name, type });
-
-        	        //Creates folder in home directory if the folder doesn't already exist
-        	        String userHomeDirectory = System.getProperty("user.home");
-        	        String folderPath = userHomeDirectory + "/Project";
-        	        File folder = new File(folderPath);
-        	        
-        	        if (!folder.exists()) 
-        	        {
-        	            folder.mkdir(); // creates the folder if it doesn't already exist
-        	        }
-        	        
-        	        //Creates "myusers.txt" in the folder called Project in the home directory
-        	        String filePath = folderPath + "/myusers.txt";
-        	        File file = new File(filePath);
-
-        	        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
-        	        {
-        	            bw.write(name + "," + type);
-        	            bw.newLine();
-        	        } 
-        	        catch (IOException e1) 
-        	        {
-        	            e1.printStackTrace();
-        	        }
-
-
-        	        //Clear text field and update table
-        	        textField.setText("");
-        	        table.setModel(model);
-        	        UserPage.dispose(); //Closes the current frame
-        	        User.main(null); //Opens User.java
-        	    }
-        	}
-
         });
     }
 }
+   
