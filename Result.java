@@ -49,6 +49,7 @@ public class Result
         ScanResults.setBounds(100, 100, 1624, 551);
         ScanResults.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanResults.getContentPane().setLayout(null);
+	    ScanResults.setResizable(false); // Make the frame not resizable
 
         //Creates a Panel in the JFrame
         JPanel panel = new JPanel();
