@@ -69,4 +69,26 @@ public class EmptyPortsScanner
 
         return String.join(", ", emptyPortsList);
     }
+
+    public static void saveEmptyPortsToFile(String targetIpAddress, String emptyPorts, String outputFolderPath) throws IOException 
+    {
+        File emptyPortsFile = new File(outputFolderPath, targetIpAddress + "_empty_ports.txt");
+
+        try (PrintWriter writer = new PrintWriter(emptyPortsFile)) 
+        {
+            writer.println("Empty Ports for IP Address: " + targetIpAddress);
+            writer.println(emptyPorts);
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        RowInformationPage rowInfoPage = new RowInformationPage(new Object[]{"Device 1", "0.0.0.0", "00:11:22:33:44:55", "Linux", "Manufacturer"});
+        rowInfoPage.show();
+    }
+
 }
