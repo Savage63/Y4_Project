@@ -42,6 +42,7 @@ public class Contacts
         Contact.setBounds(100, 100, 1189, 551);
         Contact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Contact.getContentPane().setLayout(null);
+	    Contact.setResizable(false); // Make the frame not resizable
 
         // Adds a JScrollPane to the GUI Frame
         JScrollPane scrollPane = new JScrollPane();
