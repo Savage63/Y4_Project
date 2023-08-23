@@ -1,54 +1,224 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class UserDevicePage {
-    private static JFrame frame;
-    private static JComboBox<String> userTypeComboBox;
+public class UserDevicePage 
+{
+    private JFrame devicePage;
+    private JComboBox<String> comboBox;
+    private JTable table;
+    private JTextField userField;
 
-    public static void openUserDevicePage(String userName, String userType) {
-        if (frame != null && frame.isVisible()) {
-            frame.toFront();
-        } else {
-            frame = new JFrame();
-            frame.setTitle("User Details");
-            frame.setBounds(100, 100, 400, 350); // Adjusted height for the new components
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    // Updated DeviceTableModel
+    private class DeviceTableModel extends DefaultTableModel 
+    {
+        private static final long serialVersionUID = 1L;
 
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-
-            JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel usernameLabel = new JLabel("User Name: " + userName);
-            JLabel userTypeLabel = new JLabel("User Type: " + userType);
-            topPanel.add(usernameLabel);
-            topPanel.add(userTypeLabel);
-
-            userTypeComboBox = new JComboBox<>(new String[]{"Type 1", "Type 2", "Type 3"}); // Example options
-            JButton submitButton = new JButton("Submit");
-            submitButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String selectedUserType = (String) userTypeComboBox.getSelectedItem();
-                    // Perform actions based on the selected user type
-                }
-            });
-
-            JPanel comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            comboBoxPanel.add(new JLabel("Select User Type:"));
-            comboBoxPanel.add(userTypeComboBox);
-            comboBoxPanel.add(submitButton);
-
-            JTextArea textArea = new JTextArea();
-            textArea.setEditable(false);
-
-            panel.add(topPanel, BorderLayout.NORTH);
-            panel.add(comboBoxPanel, BorderLayout.CENTER); // Add the new panel with the JComboBox and JButton
-            panel.add(new JScrollPane(textArea), BorderLayout.SOUTH); // Adjusted position for the text area
-
-            frame.getContentPane().add(panel);
-            frame.setVisible(true);
+        DeviceTableModel(Object[][] data, String[] columns) 
+        {
+            super(data, columns);
         }
+
+        @Override
+        public boolean isCellEditable(int row, int column) 
+        {
+            return false; // Set all cells as non-editable
+        }
+    }
+
+    public static void openUserDevicePage(String userName, String userType) 
+    {
+        EventQueue.invokeLater(() -> 
+        {
+            try 
+            {
+                UserDevicePage window = new UserDevicePage(userName, userType);
+                window.devicePage.setVisible(true);
+            } 
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public UserDevicePage(String userName, String userType) 
+    {
+        devicePage = new JFrame();
+        devicePage.setTitle("User Device Page");
+        devicePage.setBounds(100, 100, 834, 366);
+        devicePage.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        devicePage.getContentPane().setLayout(null);
+        devicePage.setResizable(false);
+
+        userField = new JTextField();
+        userField.setEditable(false);
+        userField.setHorizontalAlignment(JTextField.CENTER); // Center align the text
+        userField.setBounds(10, 10, 797, 23); // Adjust the width to fit the frame
+        userField.setText("User: " + userName + " | Type: " + userType);
+        devicePage.getContentPane().add(userField);
+
+        comboBox = new JComboBox<>();
+        comboBox.setBounds(150, 47, 250, 23);
+        devicePage.getContentPane().add(comboBox);
+
+        JButton actionButton = new JButton("Add Device");
+        actionButton.setBounds(450, 47, 179, 23);
+        devicePage.getContentPane().add(actionButton);
+        actionButton.addActionListener(e -> {
+            String selectedItem = (String) comboBox.getSelectedItem();
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+            // Check if the device is already in the table
+            boolean deviceExists = false;
+            for (int row = 0; row < model.getRowCount(); row++) 
+            {
+                String deviceName = (String) model.getValueAt(row, 0);
+                if (deviceName.equals(selectedItem)) 
+                {
+                    deviceExists = true;
+                    break;
+                }
+            }
+
+            if (!deviceExists) 
+            {
+                model.addRow(new Object[]{selectedItem, "Remove Device"});
+                // Save the updated devices to the file
+                saveDevicesToFile(userName, model);
+            }
+        });
+
+
+        table = new JTable();
+        table.setModel(new DeviceTableModel(
+            new Object[][] {},
+            new String[] {"Device", "Remove Device"}
+        ));
+        table.setBounds(10, 85, 796, 230);
+        devicePage.getContentPane().add(table);
+
+        table.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseClicked(MouseEvent e) 
+            {
+                int row = table.rowAtPoint(e.getPoint());
+                int column = table.columnAtPoint(e.getPoint());
+
+                if (column == 1) 
+                {
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    model.removeRow(row);
+                    // Update file or perform any other necessary actions here
+                    saveDevicesToFile(userName, model); // Update the file after removing a device
+                }
+            }
+        });
+
+        try 
+        {
+            String homeDirectory = System.getProperty("user.home");
+            String filePath = homeDirectory + File.separator + "Project" +  File.separator + "nmap_output.txt";
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                if (line.startsWith("Nmap scan report for ")) 
+                {
+                    String deviceName = line.substring("Nmap scan report for ".length()).trim();
+                    comboBox.addItem(deviceName);
+                }
+            }
+            reader.close();
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+        
+        try 
+        {
+            String homeDirectory = System.getProperty("user.home");
+            String folderPath = homeDirectory + File.separator + "Project" + File.separator + "Users" + File.separator + userName;
+            String filePath = folderPath + File.separator + "UserDevices.txt";
+
+            File file = new File(filePath);
+            if (file.exists()) 
+            {
+                BufferedReader reader = new BufferedReader(new FileReader(filePath));
+                String line;
+                while ((line = reader.readLine()) != null) 
+                {
+                    if (line.startsWith("Device: ")) 
+                    {
+                        String deviceName = line.substring("Device: ".length());
+                        DefaultTableModel model = (DefaultTableModel) table.getModel();
+                        model.addRow(new Object[]{deviceName, "Remove Device"});
+                    }
+                }
+                reader.close();
+            }
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    private void saveDevicesToFile(String userName, DefaultTableModel model) 
+    {
+        try 
+        {
+            String homeDirectory = System.getProperty("user.home");
+            String folderPath = homeDirectory + File.separator + "Project" +  File.separator + "Users" +File.separator + userName; // Create a folder with the user's username
+            String filePath = folderPath + File.separator + "UserDevices.txt";
+        
+            File folder = new File(folderPath);
+            folder.mkdirs(); // Create the folder if it doesn't exist
+        
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+        
+            for (int row = 0; row < model.getRowCount(); row++) 
+            {
+                String deviceName = (String) model.getValueAt(row, 0);
+                writer.write("Device: " + deviceName);
+                writer.newLine();
+            }
+        
+            writer.close();
+        } 
+        catch (IOException ex) 
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        EventQueue.invokeLater(() -> 
+        {
+            try 
+            {
+                UserDevicePage window = new UserDevicePage("Sample User", "Permanent");
+                window.devicePage.setVisible(true);
+            } 
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+            }
+        });
     }
 }
