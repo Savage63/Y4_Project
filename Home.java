@@ -35,13 +35,13 @@ public class Home
  	//Creates the application.
 	public Home() 
 	{ 
-	
 		//Create The GUI Frame
 	    HomePage = new JFrame();
 	    HomePage.setTitle("Home Page");
 	    HomePage.setBounds(100, 100, 1189, 551);
 	    HomePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    HomePage.getContentPane().setLayout(null);
+	    HomePage.setResizable(false); // Make the frame not resizable
 
 	    //Adds a JScrollPane to the GUI Frame
 	    JScrollPane scrollPane = new JScrollPane();
