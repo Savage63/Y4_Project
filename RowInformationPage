@@ -12,7 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class RowInformationPage 
 {
@@ -24,10 +26,11 @@ public class RowInformationPage
     private boolean emptyPortsFound = false;
     private boolean defaultCredentialsFound = false;
     private boolean defaultCredentialsResolved = false;
-
+    private Object[] rowData; // You need to set this with actual data
 
     public RowInformationPage(Object[] rowData)
     {
+        this.rowData = rowData;
         initialize(rowData);
     }
 
@@ -126,7 +129,7 @@ public class RowInformationPage
                 if (emptyPortsFound) 
                 {
                     EmptyPortCloser closePorts = new EmptyPortCloser();
-                    closePorts.closeSpecifiedPorts();
+                    closePorts.closeSpecifiedPorts(null);
                     textArea.append("Empty ports resolved and closed.\n");
                 }
 
@@ -192,6 +195,30 @@ public class RowInformationPage
             displaypanel.add(label);
             displaypanel.add(valueLabel);
         }
+    }
+    
+    public List<String> getEmptyPorts() 
+    {
+        String ipAddress = rowData[1].toString();
+        String scanFolderPath = outputFolderPath + File.separator + ipAddress;
+        String scanFilePath = scanFolderPath + File.separator + "EmptyPortsScan.txt";
+
+        try 
+        {
+            boolean scanSuccess = EmptyPortsScanner.scan(ipAddress, scanFilePath);
+
+            if (scanSuccess) 
+            {
+                String emptyPorts = EmptyPortsScanner.getEmptyPorts(scanFilePath);
+                return List.of(emptyPorts.split(", "));
+            }
+        } 
+        catch (IOException ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     public void show() 
