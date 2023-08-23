@@ -41,6 +41,7 @@ public class Scan
         ScanPage.setBounds(100, 100, 1189, 551);
         ScanPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanPage.getContentPane().setLayout(null);
+	    ScanPage.setResizable(false); // Make the frame not resizable
 
         // Add a button to the content pane using absolute layout
         JButton ScanNetworkButton = new JButton("Scan Network");
