@@ -1,11 +1,42 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmptyPortCloser 
 {
-    public void closeSpecifiedPorts(List<String> emptyPorts) 
+    public void closeSpecifiedPorts(String targetIpAddress) 
     {
-        for (String portString : emptyPorts) 
+        String folderPath = System.getProperty("user.home") + File.separator + "Project" + File.separator + "Devices";
+        File ipAddressFolder = new File(folderPath, targetIpAddress);
+        File portsFile = new File(ipAddressFolder, "EmptyPorts.txt");
+
+        if (!portsFile.exists()) 
+        {
+            System.out.println("EmptyPorts.txt not found for " + targetIpAddress);
+            return;
+        }
+
+        List<String> portsToClose = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(portsFile))) 
+        {
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                portsToClose.add(line.trim());
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        for (String portString : portsToClose) 
         {
             try 
             {
@@ -29,20 +60,4 @@ public class EmptyPortCloser
         }
     }
 
-    public static List<String> getEmptyPortsFromScannerOrPage() 
-    {
-        // Retrieve the list of empty ports from RowInformationPage
-        RowInformationPage rowInfoPage = new RowInformationPage(new Object[]{"Device 1", "0.0.0.0", "00:11:22:33:44:55", "Linux", "Manufacturer"});
-        // Assuming there's a method in RowInformationPage to get the empty ports
-        List<String> emptyPorts = rowInfoPage.getEmptyPorts();
-
-        return emptyPorts;
-    }
-
-    public static void main(String[] args)
-    {
-        List<String> emptyPorts = getEmptyPortsFromScannerOrPage();
-        EmptyPortCloser closePorts = new EmptyPortCloser();
-        closePorts.closeSpecifiedPorts(emptyPorts);
-    }
 }
