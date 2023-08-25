@@ -6,10 +6,10 @@ public class EmptyPortsScanner
 {
     private static String outputFolderPath = System.getProperty("user.home") + File.separator + "Project" + File.separator + "Devices";
 
-    public static boolean scan(String targetIpAddress, String outputFilePath) throws IOException 
+    public static List<String> scan(String targetIpAddress) throws IOException
     {
         String nmapCommand = "nmap -p- " + targetIpAddress;
-        boolean emptyPortsFound = false;
+        List<String> openUnfilteredPortsList = new ArrayList<>();
 
         try 
         {
@@ -24,71 +24,65 @@ public class EmptyPortsScanner
 
             if (System.getProperty("os.name").startsWith("Windows")) 
             {
-                processBuilder = new ProcessBuilder("cmd", "/c", nmapCommand + " > " + outputFilePath);
+                processBuilder = new ProcessBuilder("cmd", "/c", nmapCommand);
             } 
             else 
             {
-                processBuilder = new ProcessBuilder("bash", "-c", nmapCommand + " > " + outputFilePath);
+                processBuilder = new ProcessBuilder("bash", "-c", nmapCommand);
             }
 
             processBuilder.redirectErrorStream(true);
             process = processBuilder.start();
-            process.waitFor();
 
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) 
+            {
+                String line;
+                while ((line = reader.readLine()) != null) 
+                {
+                    if (line.contains("/tcp") && (line.contains("open") || line.contains("unfiltered"))) 
+                    {
+                        int startIndex = line.indexOf("/") + 1;
+                        int endIndex = line.indexOf("/tcp", startIndex);
+                        if (endIndex > startIndex) 
+                        {
+                            String port = line.substring(startIndex, endIndex);
+                            openUnfilteredPortsList.add(port);
+                        }
+                    }
+                }
+            }
+
+            process.waitFor();
         } 
         catch (IOException | InterruptedException e) 
         {
             e.printStackTrace();
         }
 
-        return emptyPortsFound;
+        return openUnfilteredPortsList;
     }
 
-    public static String getEmptyPorts(String scanFilePath) throws IOException 
-    {
-        List<String> emptyPortsList = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(scanFilePath)))) 
+    public static void saveOpenUnfilteredPortsToFile(String targetIpAddress, List<String> ports, String outputFolderPath) 
+    {
+        File ipAddressFolder = new File(outputFolderPath, targetIpAddress);
+        if (!ipAddressFolder.exists()) 
         {
-            String line;
-            while ((line = reader.readLine()) != null) 
+            ipAddressFolder.mkdirs();
+        }
+
+        File portsFile = new File(ipAddressFolder, "EmptyPorts.txt");
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(portsFile))) 
+        {
+            writer.println("Open and Unfiltered Ports for IP Address: " + targetIpAddress);
+            for (String port : ports) 
             {
-                if (line.contains("/tcp") && line.contains("closed")) 
-                {
-                    int startIndex = line.indexOf("/") + 1;
-                    int endIndex = line.indexOf("/tcp");
-                    String port = line.substring(startIndex, endIndex);
-                    emptyPortsList.add(port);
-                }
+                writer.println(port);
             }
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return String.join(", ", emptyPortsList);
-    }
-
-    public static void saveEmptyPortsToFile(String targetIpAddress, String emptyPorts, String outputFolderPath) throws IOException 
-    {
-        File emptyPortsFile = new File(outputFolderPath, targetIpAddress + "_empty_ports.txt");
-
-        try (PrintWriter writer = new PrintWriter(emptyPortsFile)) 
-        {
-            writer.println("Empty Ports for IP Address: " + targetIpAddress);
-            writer.println(emptyPorts);
-        } 
-        catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) 
-    {
-        RowInformationPage rowInfoPage = new RowInformationPage(new Object[]{"Device 1", "0.0.0.0", "00:11:22:33:44:55", "Linux", "Manufacturer"});
-        rowInfoPage.show();
     }
 
 }
