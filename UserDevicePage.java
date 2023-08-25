@@ -56,6 +56,7 @@ public class UserDevicePage
 
     public UserDevicePage(String userName, String userType) 
     {
+    	//Initialize the main JFrame for the User page
         devicePage = new JFrame();
         devicePage.setTitle("User Device Page");
         devicePage.setBounds(100, 100, 834, 366);
@@ -63,6 +64,7 @@ public class UserDevicePage
         devicePage.getContentPane().setLayout(null);
         devicePage.setResizable(false);
 
+        //Sets text field for User Name and User Type
         userField = new JTextField();
         userField.setEditable(false);
         userField.setHorizontalAlignment(JTextField.CENTER); // Center align the text
@@ -70,14 +72,17 @@ public class UserDevicePage
         userField.setText("User: " + userName + " | Type: " + userType);
         devicePage.getContentPane().add(userField);
 
+        //Initialize the Dropbox
         comboBox = new JComboBox<>();
         comboBox.setBounds(150, 47, 250, 23);
         devicePage.getContentPane().add(comboBox);
 
+        //Adds the text in the Dropbox to the JTable
         JButton actionButton = new JButton("Add Device");
         actionButton.setBounds(450, 47, 179, 23);
         devicePage.getContentPane().add(actionButton);
-        actionButton.addActionListener(e -> {
+        actionButton.addActionListener(e -> 
+        {
             String selectedItem = (String) comboBox.getSelectedItem();
             DefaultTableModel model = (DefaultTableModel) table.getModel();
 
@@ -92,7 +97,6 @@ public class UserDevicePage
                     break;
                 }
             }
-
             if (!deviceExists) 
             {
                 model.addRow(new Object[]{selectedItem, "Remove Device"});
@@ -101,7 +105,7 @@ public class UserDevicePage
             }
         });
 
-
+        //Initializes the JTable with added devices
         table = new JTable();
         table.setModel(new DeviceTableModel(
             new Object[][] {},
@@ -110,6 +114,7 @@ public class UserDevicePage
         table.setBounds(10, 85, 796, 230);
         devicePage.getContentPane().add(table);
 
+        //Adds mouse listener to table cell to delete from table
         table.addMouseListener(new MouseAdapter() 
         {
             @Override
@@ -130,6 +135,7 @@ public class UserDevicePage
 
         try 
         {
+        	//Reads scan results for list of devices
             String homeDirectory = System.getProperty("user.home");
             String filePath = homeDirectory + File.separator + "Project" +  File.separator + "nmap_output.txt";
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -151,6 +157,7 @@ public class UserDevicePage
         
         try 
         {
+        	//Creates a file to save the devices added to each user
             String homeDirectory = System.getProperty("user.home");
             String folderPath = homeDirectory + File.separator + "Project" + File.separator + "Users" + File.separator + userName;
             String filePath = folderPath + File.separator + "UserDevices.txt";
