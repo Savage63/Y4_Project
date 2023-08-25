@@ -66,6 +66,7 @@ public class User
 
     public User() 
     {
+    	//Initialize the main JFrame for the User page
         UserPage = new JFrame();
         UserPage.setTitle("User Page");
         UserPage.setBounds(100, 100, 1189, 551);
@@ -73,11 +74,13 @@ public class User
         UserPage.getContentPane().setLayout(null);
         UserPage.setResizable(false);
 
+        //Panel for navigation buttons
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 108, 512);
         UserPage.getContentPane().add(panel);
         panel.setLayout(null);
 
+        //Buttons for navigation to different sections
         JButton HomeButton = new JButton("Home");
         HomeButton.setBounds(10, 27, 89, 23);
         panel.add(HomeButton);
@@ -85,8 +88,8 @@ public class User
         {
             public void actionPerformed(ActionEvent e) 
             {
-                UserPage.dispose();
-                Home.main(null);
+                UserPage.dispose(); //Closes the current frame
+                Home.main(null); //Opens Home.java
             }
         });
         
@@ -138,71 +141,25 @@ public class User
 	        }
 	    });
 
+	    //Text field for entering user name
         textField = new JTextField();
         textField.setBounds(269, 31, 251, 23);
         UserPage.getContentPane().add(textField);
         textField.setColumns(10);
 
+        //Combo box for selecting user type
         JComboBox<Object> comboBox = new JComboBox<Object>();
         comboBox.setModel(new DefaultComboBoxModel<Object>(new String[] { "Permanent", "Temporary" }));
         comboBox.setBounds(589, 31, 179, 23);
         UserPage.getContentPane().add(comboBox);
 
+        //Table for displaying user data
         table = new JTable();
         model = new DefaultTableModel(new Object[][] {}, new String[] { "Name", "Type", "Button" });
         table.setModel(model);
         table.setBounds(118, 65, 1045, 436);
         UserPage.getContentPane().add(table);
         table.setEnabled(false);
-
-        // Add "Add User" button
-        JButton btnNewButton = new JButton("Add User");
-        btnNewButton.setBounds(819, 31, 125, 23);
-        UserPage.getContentPane().add(btnNewButton);
-        btnNewButton.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent e) 
-            {
-                String name = textField.getText();
-                if (name.isEmpty()) 
-                {
-                    JOptionPane.showMessageDialog(UserPage, "Please enter a name");
-                } 
-                else 
-                {
-                    String type = comboBox.getSelectedItem().toString();
-                    model.addRow(new Object[] { name, type });
-                    textField.setText("");
-
-                    String userHomeDirectory = System.getProperty("user.home");
-                    String folderPath = userHomeDirectory + "/Project";
-                    File folder = new File(folderPath);
-
-                    if (!folder.exists()) 
-                    {
-                        folder.mkdir();
-                    }
-
-                    String filePath = folderPath + "/myusers.txt";
-                    File file = new File(filePath);
-
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) 
-                    {
-                        bw.write(name + "," + type);
-                        bw.newLine();
-                    } 
-                    catch (IOException e1) 
-                    {
-                        e1.printStackTrace();
-                    }
-                    
-                    // Reopen the User page
-                    UserPage.dispose();
-                    User window = new User();
-                    window.UserPage.setVisible(true);
-                }
-            }
-        });
 
         // Load data from myusers.txt and add to the table
         String userHomeDirectory = System.getProperty("user.home");
@@ -223,7 +180,7 @@ public class User
             e.printStackTrace();
         }
 
-        // Handle table row clicks
+        // Table row click listener for various actions
         table.addMouseListener(new MouseAdapter() 
         {
             @Override
@@ -232,6 +189,7 @@ public class User
                 int row = table.rowAtPoint(e.getPoint());
                 int column = table.columnAtPoint(e.getPoint());
 
+                // Handle different actions based on which column is clicked
                 if (column == 0 || column == 1) 
                 {
                     String userName = model.getValueAt(row, 0).toString();
@@ -282,7 +240,7 @@ public class User
         {
         	public void actionPerformed(ActionEvent e) 
             {
-        		String name = textField.getText(); //Gets the test from the text field.
+        		String name = textField.getText(); //Gets the text from the text field.
                 if (name.isEmpty()) 
                 {
                 	//When the button is pressed it will check if the Text Field has any text in it and if no text is found, it will tell the user to enter a name.
