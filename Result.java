@@ -169,7 +169,8 @@ public class Result
                     {
                         // Get the values in the clicked row
                         Object[] rowData = new Object[table.getColumnCount()];
-                        for (int i = 0; i < rowData.length; i++) {
+                        for (int i = 0; i < rowData.length; i++) 
+                        {
                             rowData[i] = table.getValueAt(row, i);
                         }
 
