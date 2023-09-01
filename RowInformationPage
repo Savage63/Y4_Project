@@ -1,23 +1,15 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import java.awt.Desktop;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.util.*;
 import java.util.List;
 
 public class RowInformationPage 
 {
+    private String ipAddress;
     private JFrame frame;
     private JTextArea textArea;
     private boolean isScanned = false;
@@ -26,11 +18,10 @@ public class RowInformationPage
     private boolean emptyPortsFound = false;
     private boolean defaultCredentialsFound = false;
     private boolean defaultCredentialsResolved = false;
-    private Object[] rowData; // You need to set this with actual data
-
-    public RowInformationPage(Object[] rowData)
+    
+    public RowInformationPage(Object[] rowData) 
     {
-        this.rowData = rowData;
+        this.ipAddress = rowData[1].toString();
         initialize(rowData);
     }
 
@@ -44,7 +35,7 @@ public class RowInformationPage
         frame.setResizable(false);
 
         JPanel infoPanel = new JPanel();
-        String[] columnNames = { "Device Name", "IP Address", "MAC Address", "OS", "Manufacturer" };
+        String[] columnNames = {"Device Name", "IP Address", "MAC Address", "OS", "Manufacturer"};
         for (int i = 0; i < rowData.length; i++) 
         {
             JLabel label = new JLabel(columnNames[i] + ":");
@@ -65,49 +56,44 @@ public class RowInformationPage
         JButton scanButton = new JButton("Scan Device");
         scanButton.addActionListener(new ActionListener() 
         {
-            public void actionPerformed(ActionEvent e)
+            public void actionPerformed(ActionEvent e) 
             {
                 if (!isScanned) 
                 {
                     textArea.setText("Device Scan Results:\n");
                     isScanned = true;
 
-                    String ipAddress = rowData[1].toString();
-                    String scanFolderPath = outputFolderPath + File.separator + ipAddress;
-                    String scanFilePath = scanFolderPath + File.separator + "EmptyPortsScan.txt";
+                    List<String> emptyPorts = null;
+					try 
+					{
+						emptyPorts = getEmptyPorts();
+					} 
+					catch (IOException e1) 
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
-                    boolean scanSuccess = false;
-                    boolean defaultCredentialsFound = false;
+					if (!emptyPorts.isEmpty()) //If empty Ports are found
+					{
+						textArea.append("Empty Ports Found: " + String.join(", ", emptyPorts) + "\n");
+					    emptyPortsFound = true;
+					    resolveButton.setEnabled(true); //Activate Resolve Issues Button
+					}
 
-                    try 
-                    {
-                    	scanSuccess = EmptyPortsScanner.scan(ipAddress, scanFilePath);
+					defaultCredentialsFound = testDefaultCredentials(ipAddress);
+					if (defaultCredentialsFound) //If default credentials are found
+					{
+					    textArea.append("Default credentials found for " + ipAddress + "\n");
+					    defaultCredentialsFound = true;
+					    resolveButton.setEnabled(true); //Activate Resolve Issues Button
+					}
 
-                        if (scanSuccess) 
-                        {
-                            String emptyPorts = EmptyPortsScanner.getEmptyPorts(scanFilePath);
-                            textArea.append("Empty Ports Found: " + emptyPorts + "\n");
-                            emptyPortsFound = true;  // Set the emptyPortsFound flag
-                            resolveButton.setEnabled(true);
-                        }
-
-                        defaultCredentialsFound = testDefaultCredentials(ipAddress);
-                        if (defaultCredentialsFound) 
-                        {
-                            textArea.append("Default credentials found for " + ipAddress + "\n");
-                            defaultCredentialsFound = true;  // Set the defaultCredentialsFound flag
-                            resolveButton.setEnabled(true);
-                        }
-                    } 
-                    catch (IOException ex) 
-                    {
-                        ex.printStackTrace();
-                    }
-                    if (!scanSuccess && !defaultCredentialsFound) 
-                    {
-                        textArea.append("No Vulnerabilities Found.\n");
-                        resolveButton.setEnabled(false);
-                    }
+					if (!emptyPortsFound && !defaultCredentialsFound) //If nothing is found
+					{
+					    textArea.append("No Vulnerabilities Found.\n");
+					    resolveButton.setEnabled(false); //Keep Resolve Issues button blocked
+					}
                 } 
                 else 
                 {
@@ -115,6 +101,7 @@ public class RowInformationPage
                 }
             }
         });
+
 
 
         scanButton.setBounds(10, 267, 573, 23);
@@ -126,57 +113,52 @@ public class RowInformationPage
         {
             public void actionPerformed(ActionEvent e) 
             {
-                if (emptyPortsFound) 
+            	if (emptyPortsFound) //If empty ports have been found
                 {
                     EmptyPortCloser closePorts = new EmptyPortCloser();
-                    closePorts.closeSpecifiedPorts(null);
+                    closePorts.closeSpecifiedPorts(ipAddress); // Pass the ipAddress
                     textArea.append("Empty ports resolved and closed.\n");
                 }
 
-                if (defaultCredentialsFound && !defaultCredentialsResolved) 
+                if (defaultCredentialsFound && !defaultCredentialsResolved) //If Default credentials are found and hasn't been resolved yet
                 {
                     textArea.append("Default credentials resolved.\n");
-                    defaultCredentialsResolved = true; // Set the flag to true
+                    defaultCredentialsResolved = true;
 
-                        // Assuming the ipAddress is the same as the rowData[1]
-                        String ipAddress = rowData[1].toString();
-                        String scanFolderPath = outputFolderPath + File.separator + ipAddress;
-                        String changeCredentialsFilePath = scanFolderPath + File.separator + "ChangeCredentials.txt";
+                    String ipAddress = rowData[1].toString();
+                    String scanFolderPath = outputFolderPath + File.separator + ipAddress;
+                    String changeCredentialsFilePath = scanFolderPath + File.separator + "ChangeCredentials.txt"; //Creates file in the devices folder
 
-                        try 
+                    try 
+                    {
+                        File changeCredentialsFile = new File(changeCredentialsFilePath);
+                        if (!changeCredentialsFile.exists()) 
                         {
-                            // Check if the "ChangeCredentials.txt" file exists
-                            File changeCredentialsFile = new File(changeCredentialsFilePath);
-                            if (!changeCredentialsFile.exists()) 
+                            if (changeCredentialsFile.createNewFile()) 
                             {
-                                // Create and write content to the file if it doesn't exist
-                                if (changeCredentialsFile.createNewFile()) 
-                                {
-                                    // Write content to the file
-                                    FileWriter writer = new FileWriter(changeCredentialsFile);
-                                    writer.write("		How to Change User Credentials\n");
-                                    writer.write("Step 1: visit http://" + ipAddress + "/\n");
-                                    writer.write("Step 2: Enter Credentials.\n");
-                                    writer.write("Step 3: Go to Settings Tab.\n");
-                                    writer.write("Step 4: Open the Password Page.\n");
-                                    writer.write("Step 5: Enter your Current Password.\n");
-                                    writer.write("Step 6: Click Change Password.\n");
-                                    writer.write("Step 7: Make sure the new password is 12-16 characters long, has Numbers, Upper & Lowercase Letters and Symbols.\n");
-                                    writer.write("Step 6: Click Change Password\n");
-                                    writer.close();
-                                }
+                                FileWriter writer = new FileWriter(changeCredentialsFile); //Creates File & Enters below text
+                                writer.write("    How to Change User Credentials\n");
+                                writer.write("Step 1: visit http://" + ipAddress + "/\n");
+                                writer.write("Step 2: Enter Credentials.\n");
+                                writer.write("Step 3: Go to Settings Tab.\n");
+                                writer.write("Step 4: Open the Password Page.\n");
+                                writer.write("Step 5: Enter your Current Password.\n");
+                                writer.write("Step 6: Click Change Password.\n");
+                                writer.write("Step 7: Make sure the new password is 12-16 characters long, has Numbers, Upper & Lowercase Letters and Symbols.\n");
+                                writer.write("Step 6: Click Change Password\n");
+                                writer.close();
                             }
-
-                            // Open the "ChangeCredentials.txt" file
-                            if (Desktop.isDesktopSupported()) 
-                            {
-                                Desktop.getDesktop().open(changeCredentialsFile);
-                            }
-                        } 
-                        catch (IOException ex) 
-                        {
-                            ex.printStackTrace();
                         }
+
+                        if (Desktop.isDesktopSupported()) 
+                        {
+                            Desktop.getDesktop().open(changeCredentialsFile);
+                        }
+                    } 
+                    catch (IOException ex) 
+                    {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -196,29 +178,10 @@ public class RowInformationPage
             displaypanel.add(valueLabel);
         }
     }
-    
-    public List<String> getEmptyPorts() 
+
+    public List<String> getEmptyPorts() throws IOException 
     {
-        String ipAddress = rowData[1].toString();
-        String scanFolderPath = outputFolderPath + File.separator + ipAddress;
-        String scanFilePath = scanFolderPath + File.separator + "EmptyPortsScan.txt";
-
-        try 
-        {
-            boolean scanSuccess = EmptyPortsScanner.scan(ipAddress, scanFilePath);
-
-            if (scanSuccess) 
-            {
-                String emptyPorts = EmptyPortsScanner.getEmptyPorts(scanFilePath);
-                return List.of(emptyPorts.split(", "));
-            }
-        } 
-        catch (IOException ex) 
-        {
-            ex.printStackTrace();
-        }
-
-        return new ArrayList<>();
+        return EmptyPortsScanner.scan(ipAddress);
     }
 
     public void show() 
@@ -226,13 +189,27 @@ public class RowInformationPage
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
-        RowInformationPage rowInfoPage = new RowInformationPage(new Object[]{"Device 1", "0.0.0.0", "00:11:22:33:44:55", "Linux", "Manufacturer"});
-        rowInfoPage.show();
-    }
+        Object[] rowData = new Object[]{"Device 1", "0.0.0.0", "00:11:22:33:44:55", "Linux", "Manufacturer"};
+        String ipAddress = rowData[1].toString(); // Extract the IP address from the rowData
+        String outputFolderPath = System.getProperty("user.home") + File.separator + "Project" + File.separator + "Devices"; // Define outputFolderPath
 
-    private boolean testDefaultCredentials(String ipAddress)
+        RowInformationPage rowInfoPage = new RowInformationPage(rowData);
+        rowInfoPage.show();
+
+        try 
+        {
+            List<String> openUnfilteredPorts = EmptyPortsScanner.scan(ipAddress); // Pass the IP address
+            EmptyPortsScanner.saveOpenUnfilteredPortsToFile(ipAddress, openUnfilteredPorts, outputFolderPath); // Pass the IP address
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    private boolean testDefaultCredentials(String ipAddress) 
     {
         String[] usernames = {"admin", "root"};
         String[] passwords = {"admin", "root", "password", "12345"};
