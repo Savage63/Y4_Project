@@ -12,7 +12,6 @@ public class Scan
 {
     JFrame ScanPage;
 
-    // Launches the application.
     public static void main(String[] args) 
     {
         EventQueue.invokeLater(new Runnable() 
@@ -21,6 +20,7 @@ public class Scan
             {
                 try 
                 {
+                    // Create an instance of the Scan class and display the GUI
                     Scan window = new Scan();
                     window.ScanPage.setVisible(true);
                 } 
@@ -32,18 +32,17 @@ public class Scan
         });
     }
 
-    // Creates the application.
     public Scan() 
     {
-        // Creates The GUI Frame
+        // Initialize the main frame
         ScanPage = new JFrame();
         ScanPage.setTitle("Scanner Page");
         ScanPage.setBounds(100, 100, 1189, 551);
         ScanPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScanPage.getContentPane().setLayout(null);
-	    ScanPage.setResizable(false); // Make the frame not resizable
+	    ScanPage.setResizable(false);
 
-        // Add a button to the content pane using absolute layout
+        // Create and configure a button to initiate network scanning
         JButton ScanNetworkButton = new JButton("Scan Network");
         ScanNetworkButton.setBounds(406, 149, 400, 166);
         ScanPage.getContentPane().add(ScanNetworkButton);
@@ -53,50 +52,55 @@ public class Scan
             {
                 try 
                 {
-                    // Get the local IP address of the user's machine
+                    // Get local IP address and create a network address range for scanning
                     InetAddress localhost = InetAddress.getLocalHost();
-                    String localIpAddress = localhost.getHostAddress();
+                    String localIpAddress = localhost.getHostAddress(); //Gets the Local IP Address of device eg. 192.169.1.2
+                    String networkAddress = localIpAddress.substring(0, localIpAddress.lastIndexOf(".")) + ".0/24"; //changes everything  after last . to .0/24 eg. 192.168.1.2 -> 192.168.1.0/24
 
-                    // Changes the last digits in the local IP address to ".0/24" eg. 192.168.1.2 becomes 192.168.1.0/24
-                    String networkAddress = localIpAddress.substring(0, localIpAddress.lastIndexOf(".")) + ".0/24";
-
-                    // Build the Nmap command with the IP address to scan
+                    // Build and execute the appropriate nmap command based on the operating system
                     String osName = System.getProperty("os.name").toLowerCase();
                     ProcessBuilder pb;
-                    if (osName.contains("win")) 
+                    String command;
+                    if (osName.contains("win")) //If OS is Windows or not it will execute the OS specific command
                     {
-                        pb = new ProcessBuilder("cmd", "/c", "nmap -F -A -T4 " + networkAddress);
+                        command = "nmap -T4 -A -F " + networkAddress; //Sets Nmap Command
+                        pb = new ProcessBuilder("cmd", "/c", command); //Executes command with Windows command prompt commands
                     } 
                     else 
                     {
-                        pb = new ProcessBuilder("bash", "-c", "nmap -F -A -T4 " + networkAddress);
+                        command = "nmap -T4 -A -F " + networkAddress; //Sets Nmap Command
+                        pb = new ProcessBuilder("bash", "-c", command); //Executes command with Linux command prompt commands
                     }
 
-                    // Creates folder called "Project" and gets the path to the nmap_output.txt file
+                    // Create directory and output file to store nmap results
                     File projectDir = new File(System.getProperty("user.home") + File.separator + "Project");
-                    projectDir.mkdir(); // create the directory if it does not exist
+                    projectDir.mkdir();
                     File outputFile = new File(projectDir, "nmap_output.txt");
-                    
-                    // Delete the old nmap_output.txt if it exists
-                    if (outputFile.exists()) 
+
+                    try 
                     {
-                        outputFile.delete();
+                        // Delete output file if it already exists
+                        if (outputFile.exists()) 
+                        {
+                            outputFile.delete();
+                        }
+
+                        // Redirect nmap output to the output file
+                        pb.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
+
+                        // Start nmap scan process and wait for its completion
+                        Process process = pb.start();
+                        int exitCode = process.waitFor();
+                        System.out.println("nmap scan finished with exit code " + exitCode);
+
+                        // Close the current frame and open the Result window
+                        ScanPage.dispose();
+                        Result.main(null);
+                    } 
+                    catch (Exception e1) 
+                    {
+                        e1.printStackTrace();
                     }
-
-                    // Redirect Nmap output to the new nmap_output.txt file
-                    pb.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
-
-                    // Starts the Nmap process
-                    Process process = pb.start();
-
-                    // Waits for the Nmap process to finish
-                    int exitCode = process.waitFor();
-                    System.out.println("nmap scan finished with exit code " + exitCode);
-
-                    // Opens the Results.java page
-                    ScanPage.dispose(); // Dispose the current frame
-                    Result.main(null);
-
                 } 
                 catch (Exception e1) 
                 {
