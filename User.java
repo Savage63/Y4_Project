@@ -223,12 +223,6 @@ public class User
                         e1.printStackTrace();
                     }
                 }
-                else if (column == 0 || column == 2) 
-                {
-                    String userName = model.getValueAt(row, 0).toString();
-                    String userType = model.getValueAt(row, 1).toString();
-                    UserDevicePage.openUserDevicePage(userName, userType);
-                }
             }
         });
 
