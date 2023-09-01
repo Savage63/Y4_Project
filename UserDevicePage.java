@@ -137,14 +137,14 @@ public class UserDevicePage
         {
         	//Reads scan results for list of devices
             String homeDirectory = System.getProperty("user.home");
-            String filePath = homeDirectory + File.separator + "Project" +  File.separator + "nmap_output.txt";
+            String filePath = homeDirectory + File.separator + "Project" +  File.separator + "nmap_output.txt"; //reads the nmap_output.txt file
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line;
             while ((line = reader.readLine()) != null) 
             {
                 if (line.startsWith("Nmap scan report for ")) 
                 {
-                    String deviceName = line.substring("Nmap scan report for ".length()).trim();
+                    String deviceName = line.substring("Nmap scan report for ".length()).trim(); //Checks all mentions of "Nmap scan report for " to get all device names
                     comboBox.addItem(deviceName);
                 }
             }
@@ -211,21 +211,5 @@ public class UserDevicePage
         {
             ex.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) 
-    {
-        EventQueue.invokeLater(() -> 
-        {
-            try 
-            {
-                UserDevicePage window = new UserDevicePage("Sample User", "Permanent");
-                window.devicePage.setVisible(true);
-            } 
-            catch (Exception e) 
-            {
-                e.printStackTrace();
-            }
-        });
     }
 }
